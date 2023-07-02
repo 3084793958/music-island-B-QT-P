@@ -9,3 +9,4 @@ music-island但是QT插件
 
 ~/.local/lib/dde-top-panel/plugins(dde-top-panel)
 ## so文件置于Releases
+### music-island将创建文件夹(~/.local/lib/music-island-c++p)，用于存放储存数据与下载音乐
