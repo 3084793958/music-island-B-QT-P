@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/image">
+       <file>image/back.gif</file>
+       <file>image/next.gif</file>
+       <file>image/start_stop.gif</file>
+       <file>image/icon.png</file>
+       <file>image/this.svg</file>
+       <file>image/demo.ogg</file>
+    </qresource>
+</RCC>
