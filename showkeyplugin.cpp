@@ -11,9 +11,6 @@ int getRand(int min,int max)
 ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
     : QObject(parent)
 {
-    try_play->setVolume(0);
-    try_play->setMedia(QUrl::fromLocalFile(":/image/image/demo.ogg"));
-    try_play->play();
     update_timer->setInterval(30);
     connect(update_timer,SIGNAL(timeout()),this,SLOT(timer_update()));
     update_timer->start();
@@ -24,7 +21,7 @@ ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
             {
             case QMediaPlayer::StoppedState:
             {
-                if ((!not_do_anything)or(first_time==true))
+                if (((!not_do_anything)or(first_time==true))and(!out_thing))
                 {
                     first_time=false;
                     not_do_anything=false;
@@ -95,6 +92,10 @@ ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
                 else
                 {
                     not_do_anything=false;
+                }
+                if (out_thing)
+                {
+                    out_thing=false;
                 }
                 break;
             }
@@ -458,7 +459,7 @@ void ShowKeyPlugin::timer_update()
     }
     if (m_popupWidget->clean_all)
     {
-        first_time=false;
+        out_thing=true;
         m_popupWidget->clean_all=false;
         m_pluginWidget->already_start=false;
         m_popupWidget->now_music_name=nullptr;
@@ -474,12 +475,12 @@ void ShowKeyPlugin::timer_update()
     }
     if (m_popupWidget->out_this)
     {
-        first_time=false;
         m_popupWidget->out_this=false;
         if (m_popupWidget->show_music->currentIndex().row()!=-1)
         {
         if (m_pluginWidget->play_files_simple.size()==1)
         {
+            out_thing=true;
             m_popupWidget->clean_all=false;
             m_pluginWidget->already_start=false;
             m_popupWidget->now_music_name=nullptr;
@@ -521,7 +522,6 @@ void ShowKeyPlugin::timer_update()
     if (m_popupWidget->del_this)
     {
         m_popupWidget->del_this=false;
-        first_time=false;
         not_do_anything=true;
         if (m_popupWidget->show_music->currentIndex().row()!=-1)
         {
@@ -529,6 +529,7 @@ void ShowKeyPlugin::timer_update()
         QString file_path=m_pluginWidget->play_files[row];
         if (m_pluginWidget->play_files_simple.size()==1)
         {
+            out_thing=true;
             m_popupWidget->clean_all=false;
             m_pluginWidget->already_start=false;
             m_popupWidget->now_music_name=nullptr;
@@ -754,6 +755,7 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
             play_main->setMedia(QUrl::fromLocalFile(m_pluginWidget->play_files[m_popupWidget->now_playing]));
             play_main->setPosition(int(float(now_time_help)/100*all_time_help));
+            first_time=true;
         }
     }
     if (m_popupWidget->start_get)

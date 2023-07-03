@@ -34,6 +34,7 @@ public:
     int now_time_help;
     int all_time_help;
     bool first_time=true;
+    bool out_thing=false;
     QNetworkAccessManager *manager=new QNetworkAccessManager(this);
     QNetworkAccessManager *manager2=new QNetworkAccessManager(this);
     QByteArray get_reply;
