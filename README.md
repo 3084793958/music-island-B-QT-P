@@ -1,6 +1,7 @@
 # music-island-B-QT-P
 music-island但是QT插件
 # 注意事项
+### 使用GPL3.0
 ## 使用方法:
 将so文件复制到 
 
@@ -9,6 +10,7 @@ music-island但是QT插件
 ~/.local/lib/dde-top-panel/plugins(dde-top-panel)
 ## so文件置于Releases
 ### music-island将创建文件夹(~/.local/lib/music-island-c++p)，用于存放储存数据与下载音乐
+### music-island不会自动存储,请自行存储
 ## 谨慎使用删除文件，数据无价
 ### music-island.json仅用于使dde-dock/dde-top-panel认为兼容(不可缺少)
 # 开始介绍
@@ -72,5 +74,7 @@ music-island但是QT插件
 ![18.png](show/18.png)
 
 项目地址
-github: https://github.com/3084793958/music-island-B-QT-P.git
+
+github: https://githubfast.com/3084793958/music-island-B-QT-P.git
+
 githubfast: https://githubfast.com/3084793958/music-island-B-QT-P.git
