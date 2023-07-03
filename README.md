@@ -1,5 +1,14 @@
 # music-island-B-QT-P
 music-island但是QT插件
+
+操作系统版本 deepin20.8
+
+g++版本 8.3.0
+
+C++11
+
+QT版本 5.15.6
+
 # 注意事项
 ### 使用GPL3.0
 ## 使用方法:
