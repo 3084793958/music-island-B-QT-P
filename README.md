@@ -34,6 +34,7 @@ QT版本 5.15.6
 ![4.png](show/4.png)
 #### 操作演示
 ![5.gif](show/5.gif)
+#### 按下暂停时音量会匀速减小，按下播放时音量会匀速增大
 ### 3.itemTipsWidget
 #### 暂停时
 ![6.png](show/6.png)
