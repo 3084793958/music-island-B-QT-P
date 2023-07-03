@@ -10,6 +10,7 @@ music-island但是QT插件
 ## so文件置于Releases
 ### music-island将创建文件夹(~/.local/lib/music-island-c++p)，用于存放储存数据与下载音乐
 ## 谨慎使用删除文件，数据无价
+### music-island.json仅用于使dde-dock/dde-top-panel认为兼容(不可缺少)
 # 开始介绍
 ### 1.我将文件(3MB)放置于这里:
 ![1.png](show/1.png)
@@ -27,3 +28,12 @@ music-island但是QT插件
 ![6.png](show/6.png)
 #### 播放时
 ![7.png](show/7.png)
+### 4.itemPopupApplet
+#### 外观
+![8.png](show/8.png)
+#### 下载按钮
+![9.png](show/9.png)
+#### 若查找到
+![10.png](show/10.png)
+#### 若查找不到
+![11.png](show/11.png)
