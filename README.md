@@ -70,3 +70,7 @@ music-island但是QT插件
 ![17.png](show/17.png)
 #### 删除
 ![18.png](show/18.png)
+
+项目地址
+github: https://github.com/3084793958/music-island-B-QT-P.git
+githubfast: https://githubfast.com/3084793958/music-island-B-QT-P.git
