@@ -83,8 +83,18 @@ QT版本 5.15.6
 #### 删除
 ![18.png](show/18.png)
 
+## 2023/7/4更新
+### 1.itemWidget
+#### 右键菜单增加
+![19.png](show/19.png)
+### 2.新增data2.txt储存字体、颜色数据
+![20.png](show/20.png)
+### 3.设置后像这样
+![21.png](show/21.png)
+### 4.修复itemPopupApplet播放方式UI bug
+
 项目地址
 
-github: https://github.com/3084793958/music-island-B-QT-P.git
+github: https://githubfast.com/3084793958/music-island-B-QT-P.git
 
 githubfast: https://githubfast.com/3084793958/music-island-B-QT-P.git
