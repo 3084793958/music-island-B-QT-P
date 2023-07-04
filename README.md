@@ -90,7 +90,7 @@ QT版本 5.15.6
 ### 2.新增data2.txt储存字体、颜色数据
 ![20.png](show/20.png)
 ### 3.设置后像这样
-![21.png](show/21.png)
+![21.png](show/new21.png)
 ### 4.修复itemPopupApplet播放方式UI bug
 
 项目地址
