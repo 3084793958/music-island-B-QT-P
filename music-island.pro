@@ -1,7 +1,7 @@
 QT += core gui widgets x11extras multimedia multimediawidgets
 LIBS += -lX11  -lXtst
 TEMPLATE = lib
-CONFIG += plugin
+CONFIG += plugin resources_big
 TARGET = Music-Island
 
 HEADERS += \

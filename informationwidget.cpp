@@ -84,23 +84,15 @@ void InformationWidget::timer_of_button()
         on_left_mouse=false;
     }
 }
-void InformationWidget::set_movie()
-{}
 InformationWidget::InformationWidget(QWidget *parent)
     :QWidget(parent)
 {
-    /*ifstream load_data;
-    load_data.open(":/image/mainjson.txt",ios::in);
-    string s;
-    while(load_data>>s)
-    {
-        load_data>>now_music_long>>the_way_of_playing>>volume_value>>now_playing>>s;
-    }
-    load_data.close();*/
     setAcceptDrops(true);
     menu->addAction(open_music);
     menu->addAction(save_main);
     menu->addAction(load_main);
+    menu->addAction(set_font);
+    menu->addAction(set_color);
     button_back_movie->setFileName(":/image/image/back.gif");
     button_next_movie->setFileName(":/image/image/next.gif");
     button_start_or_stop_movie->setFileName(":/image/image/start_stop.gif");
@@ -171,6 +163,14 @@ void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
     if (know_what==load_main)
     {
         main_load=true;
+    }
+    if (know_what==set_font)
+    {
+        font_setting=true;
+    }
+    if (know_what==set_color)
+    {
+        color_setting=true;
     }
 }
 void InformationWidget::dragEnterEvent(QDragEnterEvent *event)

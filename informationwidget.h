@@ -33,6 +33,8 @@ public:
     QAction *open_music=new QAction(tr("打开"),this);
     QAction *save_main=new QAction(tr("存储"),this);
     QAction *load_main=new QAction(tr("读取"),this);
+    QAction *set_font=new QAction(tr("设置字体"),this);
+    QAction *set_color=new QAction(tr("设置颜色"),this);
     QStringList play_files;
     QStringList play_files_simple;
     bool already_start=false;
@@ -45,8 +47,9 @@ public:
     bool already_start_this=false;
     bool main_save=false;
     bool main_load=false;
+    bool color_setting=false;
+    bool font_setting=false;
 public slots:
     void timer_of_button();
-    void set_movie();
 };
 #endif // INFORMATIONWIDGET_H

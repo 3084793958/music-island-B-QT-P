@@ -3,6 +3,8 @@
 #include<QMessageBox>
 #include<unistd.h>
 #include<fstream>
+#include<QFontDialog>
+#include<QColorDialog>
 int getRand(int min,int max);
 int getRand(int min,int max)
 {
@@ -129,8 +131,9 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         m_proxyInter->itemAdded(this,pluginName());
     }
     load_time=-1;
-    system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt");
+    system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
     string files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/data.txt");
+    string files_name2=getenv("HOME")+string("/.local/lib/music-island-c++p/data2.txt");
     ifstream load_data;
     load_data.open(files_name,ios::in);
     string s;
@@ -171,6 +174,34 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         if (load_time==6)
         {
             m_popupWidget->the_way_of_playing=(atoi(s.c_str()));
+            if (m_popupWidget->the_way_of_playing==1)
+            {
+                m_popupWidget->action_all->setIconVisibleInMenu(true);
+                m_popupWidget->action_this->setIconVisibleInMenu(false);
+                m_popupWidget->action_random->setIconVisibleInMenu(false);
+                m_popupWidget->action_math_way->setIconVisibleInMenu(false);
+            }
+            if (m_popupWidget->the_way_of_playing==2)
+            {
+                m_popupWidget->action_all->setIconVisibleInMenu(false);
+                m_popupWidget->action_this->setIconVisibleInMenu(true);
+                m_popupWidget->action_random->setIconVisibleInMenu(false);
+                m_popupWidget->action_math_way->setIconVisibleInMenu(false);
+            }
+            if (m_popupWidget->the_way_of_playing==3)
+            {
+                m_popupWidget->action_all->setIconVisibleInMenu(false);
+                m_popupWidget->action_this->setIconVisibleInMenu(false);
+                m_popupWidget->action_random->setIconVisibleInMenu(true);
+                m_popupWidget->action_math_way->setIconVisibleInMenu(false);
+            }
+            if (m_popupWidget->the_way_of_playing==4)
+            {
+                m_popupWidget->action_all->setIconVisibleInMenu(false);
+                m_popupWidget->action_this->setIconVisibleInMenu(false);
+                m_popupWidget->action_random->setIconVisibleInMenu(false);
+                m_popupWidget->action_math_way->setIconVisibleInMenu(true);
+            }
         }
         if (load_time==7)
         {
@@ -210,6 +241,45 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         play_main->setMedia(QUrl::fromLocalFile(m_pluginWidget->play_files[m_popupWidget->now_playing]));
         play_main->setPosition(int(float(now_time_help)/100*all_time_help));
     }
+    load_data.open(files_name2,ios::in);
+    load_time=-1;
+    while(getline(load_data,s))
+    {
+        load_time++;
+        if (load_time==1)
+        {
+            font=QString::fromStdString(s);
+        }
+        if (load_time==2)
+        {
+            color.setNamedColor(QString::fromStdString(s));
+        }
+    }
+    load_data.close();
+    m_popupWidget->name->setFont(font);
+    m_popupWidget->setvolume->setFont(font);
+    m_popupWidget->set_volume_main->setFont(font);
+    m_popupWidget->setmusic_time->setFont(font);
+    m_popupWidget->set_music_time_main->setFont(font);
+    m_popupWidget->setmusic_speed->setFont(font);
+    m_popupWidget->set_music_speed_main->setFont(font);
+    m_popupWidget->get_music_button->setFont(font);
+    m_popupWidget->get_music_text->setFont(font);
+    m_popupWidget->getting_music->setFont(font);
+    m_popupWidget->show_music->setFont(font);
+    m_tipsWidget->setFont(font);
+    m_popupWidget->name->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->setvolume->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->set_volume_main->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->setmusic_time->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->get_music_button->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->show_music->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
 }
 QWidget *ShowKeyPlugin::itemWidget(const QString &itemKey)
 {
@@ -654,8 +724,9 @@ void ShowKeyPlugin::timer_update()
     if (m_pluginWidget->main_save)
     {
         m_pluginWidget->main_save=false;
-        system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt");
+        system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
         string files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/data.txt");
+        string files_name2=getenv("HOME")+string("/.local/lib/music-island-c++p/data2.txt");
         fstream f;
         f.open(files_name,ios::out);
         f<<"//data"<<"\n";
@@ -670,10 +741,15 @@ void ShowKeyPlugin::timer_update()
             f<<m_pluginWidget->play_files[it].toStdString()<<"\n";
         }
         f.close();
+        f.open(files_name2,ios::out);
+        f<<"//data2"<<"\n";
+        f<<font.toString().toStdString()<<"\n";
+        f<<color.name().toStdString()<<"\n";
+        f.close();
     }
     if (m_pluginWidget->main_load)
     {
-        system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt");
+        system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
         m_pluginWidget->main_load=false;
         m_pluginWidget->already_start=false;
         m_popupWidget->now_music_name=nullptr;
@@ -688,6 +764,7 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->show_music->setSpacing(0);
         load_time=-1;
         string files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/data.txt");
+        string files_name2=getenv("HOME")+string("/.local/lib/music-island-c++p/data2.txt");
         ifstream load_data;
         load_data.open(files_name,ios::in);
         string s;
@@ -717,6 +794,34 @@ void ShowKeyPlugin::timer_update()
             if (load_time==6)
             {
                 m_popupWidget->the_way_of_playing=(atoi(s.c_str()));
+                if (m_popupWidget->the_way_of_playing==1)
+                {
+                    m_popupWidget->action_all->setIconVisibleInMenu(true);
+                    m_popupWidget->action_this->setIconVisibleInMenu(false);
+                    m_popupWidget->action_random->setIconVisibleInMenu(false);
+                    m_popupWidget->action_math_way->setIconVisibleInMenu(false);
+                }
+                if (m_popupWidget->the_way_of_playing==2)
+                {
+                    m_popupWidget->action_all->setIconVisibleInMenu(false);
+                    m_popupWidget->action_this->setIconVisibleInMenu(true);
+                    m_popupWidget->action_random->setIconVisibleInMenu(false);
+                    m_popupWidget->action_math_way->setIconVisibleInMenu(false);
+                }
+                if (m_popupWidget->the_way_of_playing==3)
+                {
+                    m_popupWidget->action_all->setIconVisibleInMenu(false);
+                    m_popupWidget->action_this->setIconVisibleInMenu(false);
+                    m_popupWidget->action_random->setIconVisibleInMenu(true);
+                    m_popupWidget->action_math_way->setIconVisibleInMenu(false);
+                }
+                if (m_popupWidget->the_way_of_playing==4)
+                {
+                    m_popupWidget->action_all->setIconVisibleInMenu(false);
+                    m_popupWidget->action_this->setIconVisibleInMenu(false);
+                    m_popupWidget->action_random->setIconVisibleInMenu(false);
+                    m_popupWidget->action_math_way->setIconVisibleInMenu(true);
+                }
             }
             if (load_time==7)
             {
@@ -757,6 +862,45 @@ void ShowKeyPlugin::timer_update()
             play_main->setPosition(int(float(now_time_help)/100*all_time_help));
             first_time=true;
         }
+        load_data.open(files_name2,ios::in);
+        load_time=-1;
+        while(getline(load_data,s))
+        {
+            load_time++;
+            if (load_time==1)
+            {
+                font=QString::fromStdString(s);
+            }
+            if (load_time==2)
+            {
+                color.setNamedColor(QString::fromStdString(s));
+            }
+        }
+        load_data.close();
+        m_popupWidget->name->setFont(font);
+        m_popupWidget->setvolume->setFont(font);
+        m_popupWidget->set_volume_main->setFont(font);
+        m_popupWidget->setmusic_time->setFont(font);
+        m_popupWidget->set_music_time_main->setFont(font);
+        m_popupWidget->setmusic_speed->setFont(font);
+        m_popupWidget->set_music_speed_main->setFont(font);
+        m_popupWidget->get_music_button->setFont(font);
+        m_popupWidget->get_music_text->setFont(font);
+        m_popupWidget->getting_music->setFont(font);
+        m_popupWidget->show_music->setFont(font);
+        m_tipsWidget->setFont(font);
+        m_popupWidget->name->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->setvolume->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->set_volume_main->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->setmusic_time->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->get_music_button->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->show_music->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
     }
     if (m_popupWidget->start_get)
     {
@@ -769,6 +913,45 @@ void ShowKeyPlugin::timer_update()
             request.setUrl(url);
             manager->get(request);
         }
+    }
+    if (m_pluginWidget->font_setting)
+    {
+        m_pluginWidget->font_setting=false;
+        bool ok;
+        QFont now_font=m_pluginWidget->font();
+        font=QFontDialog::getFont(&ok,now_font,nullptr);
+        if (ok)
+        {
+            m_popupWidget->name->setFont(font);
+            m_popupWidget->setvolume->setFont(font);
+            m_popupWidget->set_volume_main->setFont(font);
+            m_popupWidget->setmusic_time->setFont(font);
+            m_popupWidget->set_music_time_main->setFont(font);
+            m_popupWidget->setmusic_speed->setFont(font);
+            m_popupWidget->set_music_speed_main->setFont(font);
+            m_popupWidget->get_music_button->setFont(font);
+            m_popupWidget->get_music_text->setFont(font);
+            m_popupWidget->getting_music->setFont(font);
+            m_popupWidget->show_music->setFont(font);
+            m_tipsWidget->setFont(font);
+        }
+    }
+    if (m_pluginWidget->color_setting)
+    {
+        m_pluginWidget->color_setting=false;
+        color=QColorDialog::getColor();
+        m_popupWidget->name->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->setvolume->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->set_volume_main->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->setmusic_time->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->get_music_button->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->show_music->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
     }
 }
 void ShowKeyPlugin::getting_music(QNetworkReply *reply)

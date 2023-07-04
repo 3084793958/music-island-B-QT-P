@@ -42,6 +42,8 @@ public:
     QList<QString> get_music_name;
     QList<QString> get_music_name_and_id;
     QString files_name,files_name_all;
+    QColor color;
+    QFont font;
     int wait_time=0;
     bool first_try_time=true;
 public slots:
