@@ -56,6 +56,7 @@ public:
     int lyricsID=0;
     string lyric_main;
     bool change_change=false;
+    bool can_load=false;
 public slots:
     void timer_update();
     void getting_music(QNetworkReply *reply);

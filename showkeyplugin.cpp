@@ -309,7 +309,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         }
     }
     load_data.close();
-    if (load_time>9)
+    if (load_time>10)
     {
         not_do_anything=true;
         m_pluginWidget->already_start=false;
@@ -323,6 +323,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         play_main->setMedia(QUrl::fromLocalFile(m_pluginWidget->play_files[m_popupWidget->now_playing]));
         m_popupWidget->now_playing = m_popupWidget->show_music->currentIndex().row();
         play_main->setPosition(int(float(now_time_help)/100*all_time_help));
+        can_load=true;
     }
     load_data.open(files_name2,ios::in);
     load_time=-1;
@@ -415,6 +416,8 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         m_popupWidget->lyric_move->setIconVisibleInMenu(true);
     }
     }
+    if (can_load)
+    {
     lyricsID=0;
     QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
     files_url.chop(3);
@@ -448,6 +451,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         m_popupWidget->show_lyric_next->setText("");
         m_pluginWidget->lyric_main_1->setText("无歌词");
         m_pluginWidget->lyric_main_2->setText("");
+    }
     }
 }
 QWidget *ShowKeyPlugin::itemWidget(const QString &itemKey)
@@ -757,6 +761,12 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->show_music->setModel(m_popupWidget->listmodel);
         m_popupWidget->show_music->setEditTriggers(QListView::NoEditTriggers);
         m_popupWidget->show_music->setSpacing(0);
+        lyric_text.clear();
+        lyric_time.clear();
+        m_popupWidget->show_lyric->setText("");
+        m_popupWidget->show_lyric_next->setText("");
+        m_pluginWidget->lyric_main_1->setText("");
+        m_pluginWidget->lyric_main_2->setText("");
     }
     if (m_popupWidget->out_this)
     {
@@ -778,6 +788,12 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->show_music->setModel(m_popupWidget->listmodel);
             m_popupWidget->show_music->setEditTriggers(QListView::NoEditTriggers);
             m_popupWidget->show_music->setSpacing(0);
+            lyric_text.clear();
+            lyric_time.clear();
+            m_popupWidget->show_lyric->setText("");
+            m_popupWidget->show_lyric_next->setText("");
+            m_pluginWidget->lyric_main_1->setText("");
+            m_pluginWidget->lyric_main_2->setText("");
         }
         else
         {
@@ -831,6 +847,12 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->show_music->setModel(m_popupWidget->listmodel);
             m_popupWidget->show_music->setEditTriggers(QListView::NoEditTriggers);
             m_popupWidget->show_music->setSpacing(0);
+            lyric_text.clear();
+            lyric_time.clear();
+            m_popupWidget->show_lyric->setText("");
+            m_popupWidget->show_lyric_next->setText("");
+            m_pluginWidget->lyric_main_1->setText("");
+            m_pluginWidget->lyric_main_2->setText("");
         }
         else
         {
@@ -1003,6 +1025,7 @@ void ShowKeyPlugin::timer_update()
     }
     if (m_pluginWidget->main_load)
     {
+        can_load=false;
         system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
         m_pluginWidget->main_load=false;
         m_pluginWidget->already_start=false;
@@ -1116,6 +1139,7 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->now_playing = m_popupWidget->show_music->currentIndex().row();
             play_main->setPosition(int(float(now_time_help)/100*all_time_help));
             first_time=true;
+            can_load=true;
         }
         load_data.open(files_name2,ios::in);
         load_time=-1;
@@ -1208,6 +1232,8 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->lyric_move->setIconVisibleInMenu(true);
         }
         }
+        if (can_load)
+        {
         lyricsID=0;
         QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
         files_url.chop(3);
@@ -1245,6 +1271,7 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->show_lyric_next->setText("");
             m_pluginWidget->lyric_main_1->setText("无歌词");
             m_pluginWidget->lyric_main_2->setText("");
+        }
         }
     }
     if (m_popupWidget->start_get)
@@ -1325,10 +1352,20 @@ void ShowKeyPlugin::timer_update()
     }
     else
     {
-        m_popupWidget->show_lyric->setText("无歌词");
-        m_popupWidget->show_lyric_next->setText("");
-        m_pluginWidget->lyric_main_1->setText("无歌词");
-        m_pluginWidget->lyric_main_2->setText("");
+        if (m_pluginWidget->play_files.isEmpty())
+        {
+            m_popupWidget->show_lyric->setText("");
+            m_popupWidget->show_lyric_next->setText("");
+            m_pluginWidget->lyric_main_1->setText("");
+            m_pluginWidget->lyric_main_2->setText("");
+        }
+        else
+        {
+            m_popupWidget->show_lyric->setText("无歌词");
+            m_popupWidget->show_lyric_next->setText("");
+            m_pluginWidget->lyric_main_1->setText("无歌词");
+            m_pluginWidget->lyric_main_2->setText("");
+        }
     }
     if (m_popupWidget->set_lyric_font)
     {
