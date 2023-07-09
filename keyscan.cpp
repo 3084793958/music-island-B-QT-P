@@ -55,6 +55,11 @@ void recordEventCallback(char * ptr, XRecordInterceptData * data )
             emit ((keyScan*)ptr)->sig_buttonPressed(event->u.u.detail);
         }
             break;
+        case ButtonRelease:
+        {
+            emit ((keyScan*)ptr)->sig_buttonRelease(event->u.u.detail);
+        }
+            break;
         case KeyPress:
         {
             emit ((keyScan*)ptr)->sig_keyPressed(((unsigned char*)data->data)[1]);

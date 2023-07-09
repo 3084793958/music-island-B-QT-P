@@ -9,6 +9,7 @@ public:
     virtual ~keyScan();
 signals:
     void sig_buttonPressed(unsigned char);
+    void sig_buttonRelease(unsigned char);
     void sig_keyPressed(unsigned char);
     void sig_keyRelease(unsigned char);
 protected:

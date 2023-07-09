@@ -9,6 +9,7 @@
 #include<QDragEnterEvent>
 #include<QDropEvent>
 #include<list>
+#include<informationlyric.h>
 using namespace std;
 class InformationWidget : public QWidget
 {
@@ -29,6 +30,7 @@ public:
     QLabel *the_setting_call=new QLabel(this);
     QImage *setting_call_image=new QImage(":/image/image/icon.png");
     QCursor *mouse=new QCursor();
+    InformationLyric *lyric_show=new InformationLyric;
     QMenu *menu=new QMenu(this);
     QAction *open_music=new QAction(tr("打开"),this);
     QAction *save_main=new QAction(tr("存储"),this);
@@ -49,6 +51,8 @@ public:
     bool main_load=false;
     bool color_setting=false;
     bool font_setting=false;
+    QLabel *lyric_main_1=new QLabel(lyric_show);
+    QLabel *lyric_main_2=new QLabel(lyric_show);
 public slots:
     void timer_of_button();
 };

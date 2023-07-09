@@ -9,6 +9,8 @@
 #include<QFileDialog>
 #include<iostream>
 #include<fstream>
+#include<QScreen>
+#include<QGuiApplication>
 using namespace std;
 void InformationWidget::timer_of_button()
 {
@@ -136,6 +138,14 @@ InformationWidget::InformationWidget(QWidget *parent)
     button_back->show();
     button_next->show();
     button_start_or_stop->show();
+    lyric_main_1->resize(700,45);
+    lyric_main_2->resize(700,45);
+    lyric_main_1->setAlignment(Qt::AlignLeft);
+    lyric_main_2->move(0,45);
+    lyric_main_2->setAlignment(Qt::AlignRight);
+    QRect screenRect = QGuiApplication::primaryScreen()->geometry();
+    lyric_show->move(screenRect.width()/2-350,screenRect.height()-175);
+    lyric_show->show();
     show();
 }
 void InformationWidget::contextMenuEvent(QContextMenuEvent *event)

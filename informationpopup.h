@@ -27,6 +27,8 @@ public:
     QSlider *set_music_speed_main=new QSlider(Qt::Horizontal,this);
     QPushButton *get_music_button=new QPushButton(tr("下载"),this);
     QLabel *get_music_text=new QLabel(this);
+    QLabel *show_lyric=new QLabel(this);
+    QLabel *show_lyric_next=new QLabel(this);
     QInputDialog *getting_music=new QInputDialog(this);
     QMenu *menu=new QMenu(this);
     QMenu *playing_way=new QMenu(tr("播放方式"),this);
@@ -35,6 +37,12 @@ public:
     QAction *action_random=new QAction(tr("随机播放"),this);
     QAction *action_math_way=new QAction(tr("函数播放法"),this);
     QAction *action_clean=new QAction(tr("清空列表"),this);
+    QMenu *lyric_way=new QMenu(tr("外部歌词"),this);
+    QAction *lyric_show=new QAction(tr("显示"),this);
+    QAction *lyric_hide=new QAction(tr("隐藏"),this);
+    QAction *lyric_move=new QAction(tr("躲避鼠标"),this);
+    QAction *action_set_lyric_font=new QAction(tr("设置字体颜色"),this);
+    int the_way_of_lyric=2;
     QListView *show_music=new QListView(this);
     QStringList play_files;
     QStringListModel *listmodel=new QStringListModel();
@@ -60,6 +68,7 @@ public:
     bool out_this=false;
     bool del_this=false;
     bool start_get=false;
+    bool set_lyric_font=false;
 public slots:
     void qslider_doing(int value);
     void music_value_doing(int value);

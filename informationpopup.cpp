@@ -10,16 +10,27 @@ InformationPopup::InformationPopup(QWidget *parent)
     action_this->setIcon(QIcon(":/image/image/this.svg"));
     action_random->setIcon(QIcon(":/image/image/this.svg"));
     action_math_way->setIcon(QIcon(":/image/image/this.svg"));
+    lyric_show->setIcon(QIcon(":/image/image/this.svg"));
+    lyric_hide->setIcon(QIcon(":/image/image/this.svg"));
+    lyric_move->setIcon(QIcon(":/image/image/this.svg"));
     action_all->setIconVisibleInMenu(true);
     action_this->setIconVisibleInMenu(false);
     action_random->setIconVisibleInMenu(false);
     action_math_way->setIconVisibleInMenu(false);
+    lyric_show->setIconVisibleInMenu(false);
+    lyric_hide->setIconVisibleInMenu(true);
+    lyric_move->setIconVisibleInMenu(false);
     playing_way->addAction(action_all);
     playing_way->addAction(action_this);
     playing_way->addAction(action_random);
     playing_way->addAction(action_math_way);
+    lyric_way->addAction(lyric_show);
+    lyric_way->addAction(lyric_hide);
+    lyric_way->addAction(lyric_move);
+    lyric_way->addAction(action_set_lyric_font);
     menu->addMenu(playing_way);
     menu->addAction(action_clean);
+    menu->addMenu(lyric_way);
     Qlist_menu->addAction(move_up);
     Qlist_menu->addAction(move_down);
     Qlist_menu->addAction(move_out);
@@ -66,6 +77,10 @@ InformationPopup::InformationPopup(QWidget *parent)
     resize(size_x_this,180);
     QModelIndex index=listmodel->index(now_playing);
     show_music->setCurrentIndex(index);
+    show_lyric->move(0,180);
+    show_lyric->resize(225,30);
+    show_lyric_next->move(250,180);
+    show_lyric_next->resize(225,30);
 }
 void InformationPopup::qslider_doing(int value)
 {
@@ -81,14 +96,12 @@ void InformationPopup::music_value_speed(int value)
 }
 void InformationPopup::get_music_on()
 {
-    resize(0,0);
     get_music_text->setText(getting_music->getText(nullptr,tr("输入音乐名称"),tr("输入音乐名称"),QLineEdit::Normal,get_music_text->text()));
     start_get=true;
-    resize(500,180);
 }
 void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
 {
-    if (event->pos().x()<200)
+    if ((event->pos().x()<200)or(event->pos().x()>=200&&event->pos().y()>=180))
     {
     QAction *know_what=menu->exec(mapToGlobal(event->pos()));
     if (know_what==action_clean)
@@ -142,6 +155,31 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
         n=QInputDialog::getInt(nullptr,"获取","获取n,y=(p/q)x^n+b (x为当前,y为目标)");
         b=QInputDialog::getInt(nullptr,"获取","获取b,y=(p/q)x^n+b (x为当前,y为目标)");
         the_way_of_playing=4;
+    }
+    if (know_what==lyric_show)
+    {
+        lyric_show->setIconVisibleInMenu(true);
+        lyric_hide->setIconVisibleInMenu(false);
+        lyric_move->setIconVisibleInMenu(false);
+        the_way_of_lyric=1;
+    }
+    if (know_what==lyric_hide)
+    {
+        lyric_show->setIconVisibleInMenu(false);
+        lyric_hide->setIconVisibleInMenu(true);
+        lyric_move->setIconVisibleInMenu(false);
+        the_way_of_lyric=2;
+    }
+    if (know_what==lyric_move)
+    {
+        lyric_show->setIconVisibleInMenu(false);
+        lyric_hide->setIconVisibleInMenu(false);
+        lyric_move->setIconVisibleInMenu(true);
+        the_way_of_lyric=3;
+    }
+    if (know_what==action_set_lyric_font)
+    {
+        set_lyric_font=true;
     }
     }
     else
