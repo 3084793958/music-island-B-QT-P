@@ -93,6 +93,25 @@ QT版本 5.15.6
 ![21.png](show/new21.png)
 ### 4.修复itemPopupApplet播放方式UI bug
 
+## 2024/7/9更新
+### 修复bug(大概花了6h)
+### 增加歌词支持|爬虫时会爬取歌词
+#### so文件大小3.6MB
+![22.png](show/22.png)
+#### itemPopupApplet 拓展
+![23.png](show/23.png)
+#### 有歌词情况下
+![24.png](show/24.png)
+
+![25.png](show/25.png)
+#### 无歌词情况下
+![26.png](show/26.png)
+
+![27.png](show/27.png)
+#### 设置字体颜色与itemWidget原理相同
+#### 在data2.txt中储存歌词字体颜色数据
+#### 演示
+![28.gif](show/28.gif)
 项目地址
 
 github: https://githubfast.com/3084793958/music-island-B-QT-P.git
