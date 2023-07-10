@@ -210,8 +210,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     m_popupWidget=new InformationPopup;
     if (!pluginIsDisable())
     {
-        m_proxyInter->itemAdded(this,pluginName());
-    }
+    m_proxyInter->itemAdded(this,pluginName());
     load_time=-1;
     system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
     string files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/data.txt");
@@ -451,6 +450,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         m_popupWidget->show_lyric_next->setText("");
         m_pluginWidget->lyric_main_1->setText("无歌词");
         m_pluginWidget->lyric_main_2->setText("");
+    }
     }
     }
 }

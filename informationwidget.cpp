@@ -44,7 +44,7 @@ void InformationWidget::timer_of_button()
     {
         button_next_movie->jumpToFrame(0);
     }
-    if (((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<23)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<23)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<23))
+    if (((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<23)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<23)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0))
     {
         if (already_start==false)
         {
@@ -146,7 +146,6 @@ InformationWidget::InformationWidget(QWidget *parent)
     QRect screenRect = QGuiApplication::primaryScreen()->geometry();
     lyric_show->move(screenRect.width()/2-350,screenRect.height()-175);
     lyric_show->show();
-    show();
 }
 void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
 {
