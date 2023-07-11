@@ -95,6 +95,9 @@ InformationWidget::InformationWidget(QWidget *parent)
     menu->addAction(load_main);
     menu->addAction(set_font);
     menu->addAction(set_color);
+    choose_size->addAction(top_panel);
+    choose_size->addAction(dock);
+    menu->addMenu(choose_size);
     button_back_movie->setFileName(":/image/image/back.gif");
     button_next_movie->setFileName(":/image/image/next.gif");
     button_start_or_stop_movie->setFileName(":/image/image/start_stop.gif");
@@ -140,9 +143,12 @@ InformationWidget::InformationWidget(QWidget *parent)
     button_start_or_stop->show();
     lyric_main_1->resize(700,45);
     lyric_main_2->resize(700,45);
+    show_name->resize(350,45);
     lyric_main_1->setAlignment(Qt::AlignLeft);
     lyric_main_2->move(0,45);
     lyric_main_2->setAlignment(Qt::AlignRight);
+    show_name->move(0,45);
+    show_name->setAlignment(Qt::AlignLeft);
     QRect screenRect = QGuiApplication::primaryScreen()->geometry();
     lyric_show->move(screenRect.width()/2-350,screenRect.height()-175);
     lyric_show->show();
@@ -180,6 +186,16 @@ void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
     if (know_what==set_color)
     {
         color_setting=true;
+    }
+    if (know_what==top_panel)
+    {
+        button_start_or_stop_movie->setScaledSize(QSize(23, 23));
+        the_way_of_choose_type=1;
+    }
+    if (know_what==dock)
+    {
+        button_start_or_stop_movie->setScaledSize(QSize(20, 20));
+        the_way_of_choose_type=2;
     }
 }
 void InformationWidget::dragEnterEvent(QDragEnterEvent *event)

@@ -28,6 +28,7 @@ InformationPopup::InformationPopup(QWidget *parent)
     lyric_way->addAction(lyric_hide);
     lyric_way->addAction(lyric_move);
     lyric_way->addAction(action_set_lyric_font);
+    lyric_way->addAction(action_set_back_color);
     menu->addMenu(playing_way);
     menu->addAction(action_clean);
     menu->addMenu(lyric_way);
@@ -81,6 +82,7 @@ InformationPopup::InformationPopup(QWidget *parent)
     show_lyric->resize(225,30);
     show_lyric_next->move(250,180);
     show_lyric_next->resize(225,30);
+    show_music->setStyleSheet("background:rgba(0,0,0,0)");
 }
 void InformationPopup::qslider_doing(int value)
 {
@@ -180,6 +182,10 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
     if (know_what==action_set_lyric_font)
     {
         set_lyric_font=true;
+    }
+    if (know_what==action_set_back_color)
+    {
+        set_back_color=true;
     }
     }
     else

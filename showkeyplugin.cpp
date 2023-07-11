@@ -5,6 +5,7 @@
 #include<fstream>
 #include<QFontDialog>
 #include<QColorDialog>
+#include<QRgba64>
 int getRand(int min,int max);
 int getRand(int min,int max)
 {
@@ -148,6 +149,8 @@ ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
             }
             case QMediaPlayer::PlayingState:
             {
+                if (play_main->position()==0)
+                {
                 lyricsID=0;
                 QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
                 files_url.chop(3);
@@ -187,6 +190,7 @@ ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
                     m_pluginWidget->lyric_main_2->setText("");
                 }
             }
+            }
             case QMediaPlayer::PausedState:
             {
                 ;//L'Internationale Sera le genre humain.
@@ -211,6 +215,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     if (!pluginIsDisable())
     {
     m_proxyInter->itemAdded(this,pluginName());
+    }
     load_time=-1;
     system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
     string files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/data.txt");
@@ -349,6 +354,35 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         {
             lyric_color.setNamedColor(QString::fromStdString(s));
         }
+        if (load_time==6)
+        {
+            m_pluginWidget->the_way_of_choose_type=QString::fromStdString(s).toInt();
+            if (m_pluginWidget->the_way_of_choose_type==1)
+            {
+                m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(23, 23));
+            }
+            if (m_pluginWidget->the_way_of_choose_type==2)
+            {
+                m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(20, 20));
+            }
+        }
+        if (load_time==7)
+        {
+            back_color.setRed(QString::fromStdString(s).toInt());
+        }
+        if (load_time==8)
+        {
+            back_color.setGreen(QString::fromStdString(s).toInt());
+        }
+        if (load_time==9)
+        {
+            back_color.setBlue(QString::fromStdString(s).toInt());
+        }
+        if (load_time==10)
+        {
+            back_color.setAlpha(QString::fromStdString(s).toInt());
+            m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("border-width:0px;background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+        }
     }
     load_data.close();
     if (load_time>=1)
@@ -367,6 +401,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     m_popupWidget->show_lyric->setFont(font);
     m_popupWidget->show_lyric_next->setFont(font);
     m_tipsWidget->setFont(font);
+    m_pluginWidget->show_name->setFont(font);
     }
     if (load_time>=4)
     {
@@ -382,17 +417,19 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
-    m_popupWidget->get_music_button->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->get_music_button->setStyleSheet(QString("background:rgba(0,0,0,10);color:%1").arg(color.name()));
     m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
-    m_popupWidget->show_music->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_popupWidget->show_music->setStyleSheet(QString("background:rgba(0,0,0,0);color:%1").arg(color.name()));
     m_popupWidget->show_lyric->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->show_lyric_next->setStyleSheet(QString("color:%1").arg(color.name()));
     m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
+    m_pluginWidget->show_name->setStyleSheet(QString("color:%1").arg(color.name()));
     }
     if (load_time>=5)
     {
-    m_pluginWidget->lyric_show->setStyleSheet(QString("font-size:20px;color:%1").arg(lyric_color.name()));
+    m_pluginWidget->lyric_main_1->setStyleSheet(QString("font-size:20px;color:%1").arg(lyric_color.name()));
+    m_pluginWidget->lyric_main_2->setStyleSheet(QString("font-size:20px;color:%1").arg(lyric_color.name()));
     }
     if(load_time>=3)
     {
@@ -450,7 +487,6 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         m_popupWidget->show_lyric_next->setText("");
         m_pluginWidget->lyric_main_1->setText("无歌词");
         m_pluginWidget->lyric_main_2->setText("");
-    }
     }
     }
 }
@@ -512,6 +548,15 @@ QWidget *ShowKeyPlugin::itemPopupApplet(const QString &itemKey)
 }
 void ShowKeyPlugin::timer_update()
 {
+    if (pluginIsDisable())
+    {
+        play_main->pause();
+        m_pluginWidget->already_start=false;
+        m_popupWidget->lyric_show->setIconVisibleInMenu(false);
+        m_popupWidget->lyric_hide->setIconVisibleInMenu(true);
+        m_popupWidget->lyric_move->setIconVisibleInMenu(false);
+        m_popupWidget->the_way_of_lyric=2;
+    }
     if ((abs(number_help))==100)
     {
         play_main->setVolume(m_popupWidget->set_volume_main->value());
@@ -551,6 +596,8 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->show_music->setCurrentIndex(index);
             m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
         }
+        if(play_main->position()==0&&!m_pluginWidget->already_start)
+        {
         lyricsID=0;
         QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
         files_url.chop(3);
@@ -585,6 +632,7 @@ void ShowKeyPlugin::timer_update()
             m_pluginWidget->lyric_main_1->setText("无歌词");
             m_pluginWidget->lyric_main_2->setText("");
         }
+        }
     }
     if (wait_time>0)
     {
@@ -595,12 +643,16 @@ void ShowKeyPlugin::timer_update()
             {
                 QMessageBox::information(nullptr,"非audio文件","非audio文件");
                 QFile::remove(files_name_all);
+                QString files_lyric_name=files_name_all;
+                files_lyric_name.chop(3);
+                files_lyric_name.append("lrc");
+                QFile::remove(files_lyric_name);
             }
             if((try_play->duration()!=0)and(!first_try_time))
             {
                 try_play->stop();
                 m_pluginWidget->play_files.append(files_name_all);
-                m_pluginWidget->play_files_simple.append(files_name);
+                m_pluginWidget->play_files_simple.append(files_name.append(".mp3"));
                 m_popupWidget->listmodel->setStringList(m_pluginWidget->play_files_simple);
                 m_popupWidget->show_music->setModel(m_popupWidget->listmodel);
                 m_popupWidget->show_music->setEditTriggers(QListView::NoEditTriggers);
@@ -1021,6 +1073,11 @@ void ShowKeyPlugin::timer_update()
         f<<m_popupWidget->the_way_of_lyric<<"\n";
         f<<lyric_font.toString().toStdString()<<"\n";
         f<<lyric_color.name().toStdString()<<"\n";
+        f<<m_pluginWidget->the_way_of_choose_type<<"\n";
+        f<<back_color.red()<<"\n";
+        f<<back_color.green()<<"\n";
+        f<<back_color.blue()<<"\n";
+        f<<back_color.alpha()<<"\n";
         f.close();
     }
     if (m_pluginWidget->main_load)
@@ -1166,6 +1223,35 @@ void ShowKeyPlugin::timer_update()
             {
                 lyric_color.setNamedColor(QString::fromStdString(s));
             }
+            if (load_time==6)
+            {
+                m_pluginWidget->the_way_of_choose_type=QString::fromStdString(s).toInt();
+                if (m_pluginWidget->the_way_of_choose_type==1)
+                {
+                    m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(23, 23));
+                }
+                if (m_pluginWidget->the_way_of_choose_type==2)
+                {
+                    m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(20, 20));
+                }
+            }
+            if (load_time==7)
+            {
+                back_color.setRed(QString::fromStdString(s).toInt());
+            }
+            if (load_time==8)
+            {
+                back_color.setGreen(QString::fromStdString(s).toInt());
+            }
+            if (load_time==9)
+            {
+                back_color.setBlue(QString::fromStdString(s).toInt());
+            }
+            if (load_time==10)
+            {
+                back_color.setAlpha(QString::fromStdString(s).toInt());
+                m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("border-width:0px;background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+            }
         }
         load_data.close();
         if (load_time>=1)
@@ -1184,6 +1270,7 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->show_lyric->setFont(font);
         m_popupWidget->show_lyric_next->setFont(font);
         m_tipsWidget->setFont(font);
+        m_pluginWidget->show_name->setFont(font);
         }
         if (load_time>=4)
         {
@@ -1199,17 +1286,19 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->get_music_button->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->get_music_button->setStyleSheet(QString("background:rgba(0,0,0,10);color:%1").arg(color.name()));
         m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->show_music->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->show_music->setStyleSheet(QString("background:rgba(0,0,0,0);color:%1").arg(color.name()));
         m_popupWidget->show_lyric->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->show_lyric_next->setStyleSheet(QString("color:%1").arg(color.name()));
         m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_pluginWidget->show_name->setStyleSheet(QString("color:%1").arg(color.name()));
         }
         if (load_time>=5)
         {
-        m_pluginWidget->lyric_show->setStyleSheet(QString("font-size:20px;color:%1").arg(lyric_color.name()));
+            m_pluginWidget->lyric_main_1->setStyleSheet(QString("font-size:20px;color:%1").arg(lyric_color.name()));
+            m_pluginWidget->lyric_main_2->setStyleSheet(QString("font-size:20px;color:%1").arg(lyric_color.name()));
         }
         if(load_time>=3)
         {
@@ -1234,7 +1323,9 @@ void ShowKeyPlugin::timer_update()
         }
         if (can_load)
         {
-        lyricsID=0;
+        if(play_main->position()==0&&!m_pluginWidget->already_start)
+        {
+            lyricsID=0;
         QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
         files_url.chop(3);
         files_url.append("lrc");
@@ -1273,6 +1364,7 @@ void ShowKeyPlugin::timer_update()
             m_pluginWidget->lyric_main_2->setText("");
         }
         }
+        }
     }
     if (m_popupWidget->start_get)
     {
@@ -1308,6 +1400,7 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->show_lyric->setFont(font);
             m_popupWidget->show_lyric_next->setFont(font);
             m_tipsWidget->setFont(font);
+            m_pluginWidget->show_name->setFont(font);
         }
     }
     if (m_pluginWidget->color_setting)
@@ -1321,13 +1414,14 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->get_music_button->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->get_music_button->setStyleSheet(QString("background:rgba(0,0,0,10);color:%1").arg(color.name()));
         m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->show_music->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_popupWidget->show_music->setStyleSheet(QString("background:rgba(0,0,0,0);color:%1").arg(color.name()));
         m_popupWidget->show_lyric->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->show_lyric_next->setStyleSheet(QString("color:%1").arg(color.name()));
         m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
+        m_pluginWidget->show_name->setStyleSheet(QString("color:%1").arg(color.name()));
     }
     if (!lyric_time.isEmpty())
     {
@@ -1394,6 +1488,22 @@ void ShowKeyPlugin::timer_update()
     {
         m_pluginWidget->lyric_show->resize(700,90);
         m_pluginWidget->lyric_show->lyric_can_move=false;
+    }
+    m_pluginWidget->show_name->setText("正在播放:"+m_popupWidget->now_music_name);
+    if (m_popupWidget->set_back_color)
+    {
+        m_popupWidget->set_back_color=false;
+        back_color=QColorDialog::getColor();
+        int alpha_color=QInputDialog::getInt(nullptr,"透明度Alpha(0~255)","透明度Alpha(0~255)");
+        if (alpha_color>=0&&alpha_color<=255)
+        {
+            back_color.setAlpha(alpha_color);
+        }
+        else
+        {
+            back_color.setAlpha(255);
+        }
+        m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("border-width:0px;background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
     }
 }
 void ShowKeyPlugin::getting_music(QNetworkReply *reply)

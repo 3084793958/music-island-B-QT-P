@@ -57,6 +57,7 @@ public:
     string lyric_main;
     bool change_change=false;
     bool can_load=false;
+    QColor back_color;
 public slots:
     void timer_update();
     void getting_music(QNetworkReply *reply);
@@ -65,7 +66,6 @@ private:
     InformationWidget *m_pluginWidget;
     QLabel *m_tipsWidget;
     InformationPopup *m_popupWidget;
-    //InformationLyric *m_lyricWidget;
 };
 
 #endif // SHOWKEYPLUGIN_H

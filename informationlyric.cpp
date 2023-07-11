@@ -30,6 +30,12 @@ InformationLyric::InformationLyric(QWidget *parent)
     button_timer->setInterval(30);
     connect(button_timer,SIGNAL(timeout()),this,SLOT(timer_of_button()));
     button_timer->start();
+    only_look->setText(nullptr);
+    only_look->move(0,0);
+    only_look->resize(700,90);
+    only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(0).arg(0).arg(0).arg(0));
+    only_look->lower();
+    only_look->setEnabled(false);
 }
 void InformationLyric::mousePressEvent(QMouseEvent *event)
 {

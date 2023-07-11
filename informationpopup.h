@@ -42,6 +42,7 @@ public:
     QAction *lyric_hide=new QAction(tr("隐藏"),this);
     QAction *lyric_move=new QAction(tr("躲避鼠标"),this);
     QAction *action_set_lyric_font=new QAction(tr("设置字体颜色"),this);
+    QAction *action_set_back_color=new QAction(tr("设置背景颜色"),this);
     int the_way_of_lyric=2;
     QListView *show_music=new QListView(this);
     QStringList play_files;
@@ -69,6 +70,7 @@ public:
     bool del_this=false;
     bool start_get=false;
     bool set_lyric_font=false;
+    bool set_back_color=false;
 public slots:
     void qslider_doing(int value);
     void music_value_doing(int value);

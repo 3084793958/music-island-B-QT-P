@@ -37,6 +37,9 @@ public:
     QAction *load_main=new QAction(tr("读取"),this);
     QAction *set_font=new QAction(tr("设置字体"),this);
     QAction *set_color=new QAction(tr("设置颜色"),this);
+    QMenu *choose_size=new QMenu(tr("设置开始/暂停按钮大小"),this);
+    QAction *top_panel=new QAction(tr("dde-top-panel"),this);
+    QAction *dock=new QAction(tr("dde-dock"),this);
     QStringList play_files;
     QStringList play_files_simple;
     bool already_start=false;
@@ -51,8 +54,10 @@ public:
     bool main_load=false;
     bool color_setting=false;
     bool font_setting=false;
+    int the_way_of_choose_type=1;
     QLabel *lyric_main_1=new QLabel(lyric_show);
     QLabel *lyric_main_2=new QLabel(lyric_show);
+    QLabel *show_name=new QLabel(lyric_show);
 public slots:
     void timer_of_button();
 };
