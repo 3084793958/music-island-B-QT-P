@@ -93,7 +93,7 @@ QT版本 5.15.6
 ![21.png](show/new21.png)
 ### 4.修复itemPopupApplet播放方式UI bug
 
-## 2024/7/9更新
+## 2023/7/9更新
 ### 修复bug(大概花了6h)
 ### 增加歌词支持|爬虫时会爬取歌词
 #### so文件大小3.6MB
@@ -112,6 +112,17 @@ QT版本 5.15.6
 #### 在data2.txt中储存歌词字体颜色数据
 #### 演示
 ![28.gif](show/28.gif)
+## 2023/7/11更新(上次好像写了2024)
+### 系统更新deepin20.8->deepin20.9|QT5.15.6->QT5.15.8
+#### 1.修改lyric_main内容
+![a1.png](show/a1.png)
+#### 2.对itemPopupApplet UI进行修改
+![a2.png](show/a2.png)
+#### 3.针对dde-dock顶头与lyric_main的歌词显示不明显
+![a3.gif](show/a3.gif)
+#### 4.针对插件的使用与禁用
+![a4.gif](show/a4.gif)
+
 项目地址
 
 github: https://githubfast.com/3084793958/music-island-B-QT-P.git
