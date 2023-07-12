@@ -83,6 +83,7 @@ InformationPopup::InformationPopup(QWidget *parent)
     show_lyric_next->move(250,180);
     show_lyric_next->resize(225,30);
     show_music->setStyleSheet("background:rgba(0,0,0,0)");
+    show_music->setAlternatingRowColors(true);
 }
 void InformationPopup::qslider_doing(int value)
 {

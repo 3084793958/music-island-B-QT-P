@@ -381,7 +381,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         if (load_time==10)
         {
             back_color.setAlpha(QString::fromStdString(s).toInt());
-            m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("border-width:0px;background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+            m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
         }
     }
     load_data.close();
@@ -417,10 +417,13 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
-    m_popupWidget->get_music_button->setStyleSheet(QString("background:rgba(0,0,0,10);color:%1").arg(color.name()));
+    m_popupWidget->get_music_button->setStyleSheet(QString("QPushButton{background:rgba(0,0,0,10);color:%1}"
+                                                           "QPushButton:hover{background:rgba(0,0,0,25);color:%1}").arg(color.name()));
     m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
-    m_popupWidget->show_music->setStyleSheet(QString("background:rgba(0,0,0,0);color:%1").arg(color.name()));
+    m_popupWidget->show_music->setStyleSheet(QString("QListView{background:rgba(0,0,0,0);color:%1}"
+                                                     "QListView::item:hover{background:rgba(255,255,255,100);border-left:3px solid rgb(0,85,255);color:%1}"
+                                                     "QListView::item:selected{background:rgba(0,170,255,255);color:rgb(255,255,255)}").arg(color.name()));
     m_popupWidget->show_lyric->setStyleSheet(QString("color:%1").arg(color.name()));
     m_popupWidget->show_lyric_next->setStyleSheet(QString("color:%1").arg(color.name()));
     m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
@@ -1250,7 +1253,7 @@ void ShowKeyPlugin::timer_update()
             if (load_time==10)
             {
                 back_color.setAlpha(QString::fromStdString(s).toInt());
-                m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("border-width:0px;background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+                m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
             }
         }
         load_data.close();
@@ -1286,10 +1289,13 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->get_music_button->setStyleSheet(QString("background:rgba(0,0,0,10);color:%1").arg(color.name()));
+        m_popupWidget->get_music_button->setStyleSheet(QString("QPushButton{background:rgba(0,0,0,10);color:%1}"
+                                                               "QPushButton:hover{background:rgba(0,0,0,25);color:%1}").arg(color.name()));
         m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->show_music->setStyleSheet(QString("background:rgba(0,0,0,0);color:%1").arg(color.name()));
+        m_popupWidget->show_music->setStyleSheet(QString("QListView{background:rgba(0,0,0,0);color:%1}"
+                                                         "QListView::item:hover{background:rgba(255,255,255,100);border-left:3px solid rgb(0,85,255);color:%1}"
+                                                         "QListView::item:selected{background:rgba(0,170,255,255);color:rgb(255,255,255)}").arg(color.name()));
         m_popupWidget->show_lyric->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->show_lyric_next->setStyleSheet(QString("color:%1").arg(color.name()));
         m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
@@ -1414,10 +1420,13 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->set_music_time_main->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->setmusic_speed->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->set_music_speed_main->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->get_music_button->setStyleSheet(QString("background:rgba(0,0,0,10);color:%1").arg(color.name()));
+        m_popupWidget->get_music_button->setStyleSheet(QString("QPushButton{background:rgba(0,0,0,10);color:%1}"
+                                                               "QPushButton:hover{background:rgba(0,0,0,25);color:%1}").arg(color.name()));
         m_popupWidget->get_music_text->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->getting_music->setStyleSheet(QString("color:%1").arg(color.name()));
-        m_popupWidget->show_music->setStyleSheet(QString("background:rgba(0,0,0,0);color:%1").arg(color.name()));
+        m_popupWidget->show_music->setStyleSheet(QString("QListView{background:rgba(0,0,0,0);color:%1}"
+                                                         "QListView::item:hover{background:rgba(255,255,255,100);border-left:3px solid rgb(0,85,255);color:%1}"
+                                                         "QListView::item:selected{background:rgba(0,170,255,255);color:rgb(255,255,255)}").arg(color.name()));
         m_popupWidget->show_lyric->setStyleSheet(QString("color:%1").arg(color.name()));
         m_popupWidget->show_lyric_next->setStyleSheet(QString("color:%1").arg(color.name()));
         m_tipsWidget->setStyleSheet(QString("color:%1").arg(color.name()));
@@ -1503,7 +1512,7 @@ void ShowKeyPlugin::timer_update()
         {
             back_color.setAlpha(255);
         }
-        m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("border-width:0px;background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+        m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
     }
 }
 void ShowKeyPlugin::getting_music(QNetworkReply *reply)
@@ -1537,12 +1546,22 @@ void ShowKeyPlugin::getting_music(QNetworkReply *reply)
                     if(artistsKeys.contains("artists"))
                     {
                         QJsonArray artistsArray = object1["artists"].toArray();
+                        get_artists.clear();
                         for(auto j : artistsArray)
                         {
                             QJsonObject object2 = j.toObject();
-                            get_music_name.append(object1["name"].toString()+"--"+object2["name"].toString());
-                            get_music_name_and_id.append(object1["name"].toString()+"--"+object2["name"].toString()+"--"+QString::number(object1["id"].toInt()));
+                            if(get_artists==nullptr)
+                            {
+                                get_artists=object2["name"].toString();
+                            }
+                            else
+                            {
+                                get_artists.append("&");
+                                get_artists.append(object2["name"].toString());
+                            }
                         }
+                        get_music_name.append(object1["name"].toString()+"--"+get_artists);
+                        get_music_name_and_id.append(object1["name"].toString()+"--"+get_artists+"--"+QString::number(object1["id"].toInt()));
                     }
                     else
                     {
