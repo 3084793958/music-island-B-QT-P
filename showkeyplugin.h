@@ -59,6 +59,7 @@ public:
     bool can_load=false;
     QColor back_color;
     QString get_artists;
+    bool set_style_first=false;
 public slots:
     void timer_update();
     void getting_music(QNetworkReply *reply);

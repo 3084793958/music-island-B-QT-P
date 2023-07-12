@@ -44,7 +44,7 @@ void InformationWidget::timer_of_button()
     {
         button_next_movie->jumpToFrame(0);
     }
-    if (((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<23)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<23)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0))
+    if ((((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<23)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<23)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0)and(the_way_of_choose_type=1))or(((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<21)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<21)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0)and(the_way_of_choose_type=2)))
     {
         if (already_start==false)
         {

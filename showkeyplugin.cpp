@@ -1482,7 +1482,8 @@ void ShowKeyPlugin::timer_update()
             m_pluginWidget->lyric_main_2->setFont(lyric_font);
         }
         lyric_color=QColorDialog::getColor();
-        m_pluginWidget->lyric_show->setStyleSheet(QString("color:%1").arg(lyric_color.name()));
+        m_pluginWidget->lyric_main_1->setStyleSheet(QString("color:%1").arg(lyric_color.name()));
+        m_pluginWidget->lyric_main_2->setStyleSheet(QString("color:%1").arg(lyric_color.name()));
     }
     if (m_popupWidget->the_way_of_lyric==1)
     {
@@ -1513,6 +1514,13 @@ void ShowKeyPlugin::timer_update()
             back_color.setAlpha(255);
         }
         m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+    }
+    if (!set_style_first)
+    {
+    set_style_first=true;
+    m_popupWidget->show_music->setStyleSheet(QString("QListView{background:rgba(0,0,0,0);color:%1}"
+                                                     "QListView::item:hover{background:rgba(255,255,255,100);border-left:3px solid rgb(0,85,255);color:%1}"
+                                                     "QListView::item:selected{background:rgba(0,170,255,255);color:rgb(255,255,255)}").arg(color.name()));
     }
 }
 void ShowKeyPlugin::getting_music(QNetworkReply *reply)
