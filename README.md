@@ -122,9 +122,11 @@ QT版本 5.15.6
 ![a3.gif](show/a3.gif)
 #### 4.针对插件的使用与禁用
 ![a4.gif](show/a4.gif)
+## 2023/7/12更新
+### 修复爬虫bug&修改QListView与修改QPushButton外观
 
 项目地址
 
-github: https://github.com/3084793958/music-island-B-QT-P.git
+github: https://githubfast.com/3084793958/music-island-B-QT-P.git
 
 githubfast: https://githubfast.com/3084793958/music-island-B-QT-P.git
