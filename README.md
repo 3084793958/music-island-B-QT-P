@@ -139,9 +139,8 @@ QT版本 5.15.6
 #### dde-dock会禁用插件
 #### QT6与QT5有很大区别，兼容应该不理想
 #### 实践是检验真理的唯一标准,所以用V23Beta再编译一次(等我搞定硬件问题再说)
-
 项目地址
 
-github: https://github.com/3084793958/music-island-B-QT-P.git
+github: [https://github.com/3084793958/music-island-B-QT-P.git](https://github.com/3084793958/music-island-B-QT-P.git)
 
-githubfast: https://githubfast.com/3084793958/music-island-B-QT-P.git
+githubfast: [https://githubfast.com/3084793958/music-island-B-QT-P.git](https://githubfast.com/3084793958/music-island-B-QT-P.git)
