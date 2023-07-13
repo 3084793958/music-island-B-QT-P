@@ -124,6 +124,21 @@ QT版本 5.15.6
 ![a4.gif](show/a4.gif)
 ## 2023/7/12更新
 ### 修复爬虫bug&修改QListView与修改QPushButton外观
+## 2023/7/13更新
+### 在InformationLyric中添加 时长/总时长
+![b1.png](show/b1.png)
+### 对itemPopupApplet UI进行修改
+![b2.png](show/b2.png)
+### 首先声明，这不是由music-island引起的
+![b3.gif](show/b3.gif)
+### 针对dde-dock作出如下修改
+![b4.gif](show/b4.gif)
+### 修改为：在右键时无法触发InformationWidget中的按钮
+### 关于V23Beta不能正常使用
+#### 有些github上的dde-dock插件对V23Beta有独立的支持
+#### dde-dock会禁用插件
+#### QT6与QT5有很大区别，兼容应该不理想
+#### 实践是检验真理的唯一标准,所以用V23Beta再编译一次(等我搞定硬件问题再说)
 
 项目地址
 
