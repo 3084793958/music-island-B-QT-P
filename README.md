@@ -142,6 +142,6 @@ QT版本 5.15.6
 
 项目地址
 
-github: https://githubfast.com/3084793958/music-island-B-QT-P.git
+github: https://github.com/3084793958/music-island-B-QT-P.git
 
 githubfast: https://githubfast.com/3084793958/music-island-B-QT-P.git
