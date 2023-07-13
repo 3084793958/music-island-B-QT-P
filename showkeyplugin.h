@@ -29,7 +29,7 @@ public:
     QMediaPlayer *try_play=new QMediaPlayer();
     bool not_do_anything=false;
     int number_help=100;
-    int time,h,m,s;
+    int time,h,m,s,time_all,time_h,time_m,time_s;
     int load_time;
     int now_time_help;
     int all_time_help;

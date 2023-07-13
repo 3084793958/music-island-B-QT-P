@@ -1,5 +1,4 @@
 #include "informationwidget.h"
-#include "informationpopup.h"
 #include "keyscan.h"
 #include<stdlib.h>
 #include<iostream>
@@ -17,13 +16,20 @@ void InformationWidget::timer_of_button()
     button_back_movie->start();
     button_next_movie->start();
     button_start_or_stop_movie->start();
-    if (((mouse->pos().x()-button_back->mapToGlobal(QPoint(0,0)).x())<15)and((mouse->pos().x()-button_back->mapToGlobal(QPoint(0,0)).x())>0)and((mouse->pos().y()-button_back->mapToGlobal(QPoint(0,0)).y())<20)and((mouse->pos().y()-button_back->mapToGlobal(QPoint(0,0)).y())>0))
+    if ((((mouse->pos().x()-button_back->mapToGlobal(QPoint(0,0)).x())<15)and((mouse->pos().x()-button_back->mapToGlobal(QPoint(0,0)).x())>0)and((mouse->pos().y()-button_back->mapToGlobal(QPoint(0,0)).y())<20)and((mouse->pos().y()-button_back->mapToGlobal(QPoint(0,0)).y())>0)))
     {
         button_back_movie->jumpToFrame(1);
         can_popup=false;
         if (on_left_mouse==true)
         {
+            if (can_not_use)
+            {
+                can_not_use=false;
+            }
+            else
+            {
             back_music=true;
+            }
         }
     }
     else
@@ -31,20 +37,27 @@ void InformationWidget::timer_of_button()
         button_back_movie->jumpToFrame(0);
         can_popup=true;
     }
-    if (((mouse->pos().x()-button_next->mapToGlobal(QPoint(0,0)).x())<15)and(mouse->pos().x()-button_next->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_next->mapToGlobal(QPoint(0,0)).y())<20)and((mouse->pos().y()-button_next->mapToGlobal(QPoint(0,0)).y())>0))
+    if ((((mouse->pos().x()-button_next->mapToGlobal(QPoint(0,0)).x())<15)and(mouse->pos().x()-button_next->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_next->mapToGlobal(QPoint(0,0)).y())<20)and((mouse->pos().y()-button_next->mapToGlobal(QPoint(0,0)).y())>0)))
     {
         button_next_movie->jumpToFrame(1);
         can_popup=false;
         if (on_left_mouse==true)
         {
+            if (can_not_use)
+            {
+                can_not_use=false;
+            }
+            else
+            {
             next_music=true;
+            }
         }
     }
     else
     {
         button_next_movie->jumpToFrame(0);
     }
-    if ((((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<23)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<23)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0)and(the_way_of_choose_type=1))or(((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<21)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<21)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0)and(the_way_of_choose_type=2)))
+    if (((((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<23)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<23)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0)and(the_way_of_choose_type==1))or(((mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x())<20)and(mouse->pos().x()-button_start_or_stop->mapToGlobal(QPoint(0,0)).x()>0)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())<20)and((mouse->pos().y()-button_start_or_stop->mapToGlobal(QPoint(0,0)).y())>0)and(the_way_of_choose_type==2))))
     {
         if (already_start==false)
         {
@@ -56,10 +69,17 @@ void InformationWidget::timer_of_button()
         }
         if (on_left_mouse==true)
         {
+            if (can_not_use)
+            {
+                can_not_use=false;
+            }
+            else
+            {
             if (!play_files.empty())
             {
-            already_start=not already_start;
-            already_start_this=true;
+                already_start=not already_start;
+                already_start_this=true;
+            }
             }
         }
         can_popup=false;
@@ -89,6 +109,10 @@ void InformationWidget::timer_of_button()
 InformationWidget::InformationWidget(QWidget *parent)
     :QWidget(parent)
 {
+    top_panel->setIcon(QIcon(":/image/image/this.svg"));
+    dock->setIcon(QIcon(":/image/image/this.svg"));
+    pos_up_down->setIcon(QIcon(":/image/image/this.svg"));
+    pos_left_right->setIcon(QIcon(":/image/image/this.svg"));
     setAcceptDrops(true);
     menu->addAction(open_music);
     menu->addAction(save_main);
@@ -97,7 +121,10 @@ InformationWidget::InformationWidget(QWidget *parent)
     menu->addAction(set_color);
     choose_size->addAction(top_panel);
     choose_size->addAction(dock);
+    pos_dock->addAction(pos_up_down);
+    pos_dock->addAction(pos_left_right);
     menu->addMenu(choose_size);
+    menu->addMenu(pos_dock);
     button_back_movie->setFileName(":/image/image/back.gif");
     button_next_movie->setFileName(":/image/image/next.gif");
     button_start_or_stop_movie->setFileName(":/image/image/start_stop.gif");
@@ -124,6 +151,10 @@ InformationWidget::InformationWidget(QWidget *parent)
         if (c==1)
         {
             on_left_mouse=true;
+        }
+        if (c==3)
+        {
+            can_not_use=!can_not_use;
         }
     });
     btnCheck->start();
@@ -189,13 +220,35 @@ void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
     }
     if (know_what==top_panel)
     {
-        button_start_or_stop_movie->setScaledSize(QSize(23, 23));
         the_way_of_choose_type=1;
+        button_start_or_stop_movie->setScaledSize(QSize(23, 23));
+        top_panel->setIconVisibleInMenu(true);
+        dock->setIconVisibleInMenu(false);
     }
     if (know_what==dock)
     {
-        button_start_or_stop_movie->setScaledSize(QSize(20, 20));
         the_way_of_choose_type=2;
+        button_start_or_stop_movie->setScaledSize(QSize(20, 20));
+        top_panel->setIconVisibleInMenu(false);
+        dock->setIconVisibleInMenu(true);
+    }
+    if (know_what==pos_up_down)
+    {
+        change_pos=true;
+        pos_up_down->setIconVisibleInMenu(true);
+        pos_left_right->setIconVisibleInMenu(false);
+        the_way_of_choose_pos=1;
+        Layout->setDirection(QBoxLayout::LeftToRight);
+        setLayout(Layout);
+    }
+    if (know_what==pos_left_right)
+    {
+        change_pos=true;
+        pos_up_down->setIconVisibleInMenu(false);
+        pos_left_right->setIconVisibleInMenu(true);
+        the_way_of_choose_pos=2;
+        Layout->setDirection(QBoxLayout::Down);
+        setLayout(Layout);
     }
 }
 void InformationWidget::dragEnterEvent(QDragEnterEvent *event)

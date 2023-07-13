@@ -360,10 +360,14 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
             if (m_pluginWidget->the_way_of_choose_type==1)
             {
                 m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(23, 23));
+                m_pluginWidget->top_panel->setIconVisibleInMenu(true);
+                m_pluginWidget->dock->setIconVisibleInMenu(false);
             }
             if (m_pluginWidget->the_way_of_choose_type==2)
             {
                 m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(20, 20));
+                m_pluginWidget->top_panel->setIconVisibleInMenu(false);
+                m_pluginWidget->dock->setIconVisibleInMenu(true);
             }
         }
         if (load_time==7)
@@ -382,6 +386,24 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         {
             back_color.setAlpha(QString::fromStdString(s).toInt());
             m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+        }
+        if (load_time==11)
+        {
+            m_pluginWidget->the_way_of_choose_pos=QString::fromStdString(s).toInt();
+            if (m_pluginWidget->the_way_of_choose_pos==1)
+            {
+                m_pluginWidget->pos_up_down->setIconVisibleInMenu(true);
+                m_pluginWidget->pos_left_right->setIconVisibleInMenu(false);
+                m_pluginWidget->Layout->setDirection(QBoxLayout::LeftToRight);
+                m_pluginWidget->setLayout(m_pluginWidget->Layout);
+            }
+            if (m_pluginWidget->the_way_of_choose_pos==2)
+            {
+                m_pluginWidget->pos_up_down->setIconVisibleInMenu(false);
+                m_pluginWidget->pos_left_right->setIconVisibleInMenu(true);
+                m_pluginWidget->Layout->setDirection(QBoxLayout::Down);
+                m_pluginWidget->setLayout(m_pluginWidget->Layout);
+            }
         }
     }
     load_data.close();
@@ -551,6 +573,15 @@ QWidget *ShowKeyPlugin::itemPopupApplet(const QString &itemKey)
 }
 void ShowKeyPlugin::timer_update()
 {
+    if (m_pluginWidget->change_pos)
+    {
+        m_pluginWidget->change_pos=false;
+        m_proxyInter->itemRemoved(this, pluginName());
+        m_proxyInter->itemAdded(this, pluginName());
+        m_popupWidget->show_music->setStyleSheet(QString("QListView{background:rgba(0,0,0,0);color:%1}"
+                                                         "QListView::item:hover{background:rgba(255,255,255,100);border-left:3px solid rgb(0,85,255);color:%1}"
+                                                         "QListView::item:selected{background:rgba(0,170,255,255);color:rgb(255,255,255)}").arg(color.name()));
+    }
     if (pluginIsDisable())
     {
         play_main->pause();
@@ -559,6 +590,9 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->lyric_hide->setIconVisibleInMenu(true);
         m_popupWidget->lyric_move->setIconVisibleInMenu(false);
         m_popupWidget->the_way_of_lyric=2;
+        m_popupWidget->show_music->setStyleSheet(QString("QListView{background:rgba(0,0,0,0);color:%1}"
+                                                         "QListView::item:hover{background:rgba(255,255,255,100);border-left:3px solid rgb(0,85,255);color:%1}"
+                                                         "QListView::item:selected{background:rgba(0,170,255,255);color:rgb(255,255,255)}").arg(color.name()));
     }
     if ((abs(number_help))==100)
     {
@@ -1081,6 +1115,7 @@ void ShowKeyPlugin::timer_update()
         f<<back_color.green()<<"\n";
         f<<back_color.blue()<<"\n";
         f<<back_color.alpha()<<"\n";
+        f<<m_pluginWidget->the_way_of_choose_pos<<"\n";
         f.close();
     }
     if (m_pluginWidget->main_load)
@@ -1232,10 +1267,14 @@ void ShowKeyPlugin::timer_update()
                 if (m_pluginWidget->the_way_of_choose_type==1)
                 {
                     m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(23, 23));
+                    m_pluginWidget->top_panel->setIconVisibleInMenu(true);
+                    m_pluginWidget->dock->setIconVisibleInMenu(false);
                 }
                 if (m_pluginWidget->the_way_of_choose_type==2)
                 {
                     m_pluginWidget->button_start_or_stop_movie->setScaledSize(QSize(20, 20));
+                    m_pluginWidget->top_panel->setIconVisibleInMenu(false);
+                    m_pluginWidget->dock->setIconVisibleInMenu(true);
                 }
             }
             if (load_time==7)
@@ -1254,6 +1293,24 @@ void ShowKeyPlugin::timer_update()
             {
                 back_color.setAlpha(QString::fromStdString(s).toInt());
                 m_pluginWidget->lyric_show->only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(back_color.red()).arg(back_color.green()).arg(back_color.blue()).arg(back_color.alpha()));
+            }
+            if (load_time==11)
+            {
+                m_pluginWidget->the_way_of_choose_pos=QString::fromStdString(s).toInt();
+                if (m_pluginWidget->the_way_of_choose_pos==1)
+                {
+                    m_pluginWidget->pos_up_down->setIconVisibleInMenu(true);
+                    m_pluginWidget->pos_left_right->setIconVisibleInMenu(false);
+                    m_pluginWidget->Layout->setDirection(QBoxLayout::LeftToRight);
+                    m_pluginWidget->setLayout(m_pluginWidget->Layout);
+                }
+                if (m_pluginWidget->the_way_of_choose_pos==2)
+                {
+                    m_pluginWidget->pos_up_down->setIconVisibleInMenu(false);
+                    m_pluginWidget->pos_left_right->setIconVisibleInMenu(true);
+                    m_pluginWidget->Layout->setDirection(QBoxLayout::Down);
+                    m_pluginWidget->setLayout(m_pluginWidget->Layout);
+                }
             }
         }
         load_data.close();
@@ -1499,7 +1556,15 @@ void ShowKeyPlugin::timer_update()
         m_pluginWidget->lyric_show->resize(700,90);
         m_pluginWidget->lyric_show->lyric_can_move=false;
     }
-    m_pluginWidget->show_name->setText("正在播放:"+m_popupWidget->now_music_name);
+    time=int(play_main->position()/1000);
+    h=time/3600;
+    m=(time-h*3600)/60;
+    s=time-h*3600-m*60;
+    time_all=int(play_main->duration()/1000);
+    time_h=time_all/3600;
+    time_m=(time_all-time_h*3600)/60;
+    time_s=time_all-time_h*3600-time_m*60;
+    m_pluginWidget->show_name->setText("正在播放:"+m_popupWidget->now_music_name+"\n"+QString("%1:%2:%3/%4:%5:%6").arg(h).arg(m).arg(s).arg(time_h).arg(time_m).arg(time_s));
     if (m_popupWidget->set_back_color)
     {
         m_popupWidget->set_back_color=false;
