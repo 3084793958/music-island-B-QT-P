@@ -22,11 +22,7 @@ void InformationWidget::timer_of_button()
         can_popup=false;
         if (on_left_mouse==true)
         {
-            if (can_not_use)
-            {
-                can_not_use=false;
-            }
-            else
+            if (!can_not_use)
             {
             back_music=true;
             }
@@ -43,11 +39,7 @@ void InformationWidget::timer_of_button()
         can_popup=false;
         if (on_left_mouse==true)
         {
-            if (can_not_use)
-            {
-                can_not_use=false;
-            }
-            else
+            if (!can_not_use)
             {
             next_music=true;
             }
@@ -69,11 +61,7 @@ void InformationWidget::timer_of_button()
         }
         if (on_left_mouse==true)
         {
-            if (can_not_use)
-            {
-                can_not_use=false;
-            }
-            else
+            if (!can_not_use)
             {
             if (!play_files.empty())
             {
@@ -104,6 +92,7 @@ void InformationWidget::timer_of_button()
     if (on_left_mouse==true)
     {
         on_left_mouse=false;
+        can_not_use=false;
     }
 }
 InformationWidget::InformationWidget(QWidget *parent)

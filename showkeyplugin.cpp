@@ -676,7 +676,9 @@ void ShowKeyPlugin::timer_update()
         wait_time--;
         if (wait_time==0)
         {
-            if ((try_play->duration()==0)and(!first_try_time))
+            if (!first_try_time)
+            {
+            if ((try_play->duration()==0))
             {
                 QMessageBox::information(nullptr,"非audio文件","非audio文件");
                 QFile::remove(files_name_all);
@@ -685,7 +687,7 @@ void ShowKeyPlugin::timer_update()
                 files_lyric_name.append("lrc");
                 QFile::remove(files_lyric_name);
             }
-            if((try_play->duration()!=0)and(!first_try_time))
+            else
             {
                 try_play->stop();
                 m_pluginWidget->play_files.append(files_name_all);
@@ -707,6 +709,7 @@ void ShowKeyPlugin::timer_update()
                     m_popupWidget->show_music->setCurrentIndex(index);
                     m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
                 }
+            }
             }
             if(first_try_time)
             {
