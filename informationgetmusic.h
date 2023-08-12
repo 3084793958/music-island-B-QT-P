@@ -38,7 +38,7 @@ public:
     QPushButton *up_page=new QPushButton(tr("上"),this);
     QPushButton *down_page=new QPushButton(tr("下"),this);
     QTimer *button_timer=new QTimer();
-    int page=1;
+    int page=0;
     QString s_music_name;
     int time,h,m,s;
     bool HS_time_moving=false;

@@ -82,9 +82,9 @@ void InformationGetmusic::music_value_speed(int value)
 }
 QString InformationGetmusic::get_music_main(QString s_music_name,int page)
 {
-    if ((s_music_name!=nullptr)and(page>0))
+    if ((s_music_name!=nullptr)and(page>=0))
     {
-        QString url="http://music.163.com/api/search/get/web?csrf_token=hlpretag=&hlposttag=&s={"+s_music_name+"}&type="+QString::number(page)+"&offset=0&total=true&limit=10";
+        QString url="http://music.163.com/api/search/get/web?csrf_token=hlpretag=&hlposttag=&s={"+s_music_name+"}&type=1&offset="+QString::number(page)+"&total=true&limit=10";
         return url;
     }
     else
@@ -166,9 +166,14 @@ void InformationGetmusic::getting_music(QNetworkReply *reply)
     }
     if (get_music_id.isEmpty())
     {
-        reply_music_list.clear();
-        reply_music_list.append("别看了，空的！");
+        reply_music_list.append(QString::number(page));
+        listmodel->setStringList(reply_music_list);
+        show_reply_music->setModel(listmodel);
+        show_reply_music->setEditTriggers(QListView::NoEditTriggers);
+        show_reply_music->setSpacing(0);
     }
+    else
+    {
     listmodel->setStringList(reply_music_list);
     show_reply_music->setModel(listmodel);
     show_reply_music->setEditTriggers(QListView::NoEditTriggers);
@@ -178,6 +183,7 @@ void InformationGetmusic::getting_music(QNetworkReply *reply)
     if (try_to_listen->position()==0||try_to_listen->position()==try_to_listen->duration())
     {
         try_to_listen->setMedia(QUrl(reply_music_list[0]));
+    }
     }
 }
 void InformationGetmusic::getting_lyric(QNetworkReply *reply)
@@ -284,6 +290,7 @@ void InformationGetmusic::timer_of_button()
     if (isHidden())
     {
         try_to_listen->stop();
+        page=0;
     }
 }
 void InformationGetmusic::get_it_button_click()
@@ -303,7 +310,7 @@ void InformationGetmusic::do_not_get_button_click()
 }
 void InformationGetmusic::up_page_button_click()
 {
-    if (page>1)
+    if (page>0)
     {
         page--;
         QNetworkRequest request;
