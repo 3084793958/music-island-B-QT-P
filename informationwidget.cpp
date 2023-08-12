@@ -102,6 +102,10 @@ InformationWidget::InformationWidget(QWidget *parent)
     dock->setIcon(QIcon(":/image/image/this.svg"));
     pos_up_down->setIcon(QIcon(":/image/image/this.svg"));
     pos_left_right->setIcon(QIcon(":/image/image/this.svg"));
+    top_panel->setIconVisibleInMenu(true);
+    dock->setIconVisibleInMenu(false);
+    pos_up_down->setIconVisibleInMenu(false);
+    pos_left_right->setIconVisibleInMenu(true);
     setAcceptDrops(true);
     menu->addAction(open_music);
     menu->addAction(save_main);

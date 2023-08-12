@@ -17,8 +17,6 @@ ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
     update_timer->setInterval(30);
     connect(update_timer,SIGNAL(timeout()),this,SLOT(timer_update()));
     update_timer->start();
-    connect(manager,SIGNAL(finished(QNetworkReply *)),this,SLOT(getting_music(QNetworkReply *)));
-    connect(manager_lyric,SIGNAL(finished(QNetworkReply *)),this,SLOT(getting_lyric(QNetworkReply *)));
     connect(play_main,&QMediaPlayer::stateChanged,[=]()
     {
             switch(play_main->state())
@@ -405,6 +403,18 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
                 m_pluginWidget->setLayout(m_pluginWidget->Layout);
             }
         }
+        if (load_time==12)
+        {
+            m_pluginWidget->getting_music_widget->set_volume_main->setValue(QString::fromStdString(s).toInt());
+        }
+        if (load_time==13)
+        {
+            m_pluginWidget->getting_music_widget->set_music_time_main->setValue(QString::fromStdString(s).toInt());
+        }
+        if (load_time==14)
+        {
+            m_pluginWidget->getting_music_widget->set_music_speed_main->setValue(QString::fromStdString(s).toInt());
+        }
     }
     load_data.close();
     if (load_time>=1)
@@ -585,6 +595,9 @@ void ShowKeyPlugin::timer_update()
     if (pluginIsDisable())
     {
         play_main->pause();
+        m_pluginWidget->getting_music_widget->try_to_listen->pause();
+        m_pluginWidget->getting_music_widget->doing_getting=false;
+        m_pluginWidget->getting_music_widget->close();
         m_pluginWidget->already_start=false;
         m_popupWidget->lyric_show->setIconVisibleInMenu(false);
         m_popupWidget->lyric_hide->setIconVisibleInMenu(true);
@@ -669,59 +682,6 @@ void ShowKeyPlugin::timer_update()
             m_pluginWidget->lyric_main_1->setText("无歌词");
             m_pluginWidget->lyric_main_2->setText("");
         }
-        }
-    }
-    if (wait_time>0)
-    {
-        wait_time--;
-        if (wait_time==0)
-        {
-            if (!first_try_time)
-            {
-            if ((try_play->duration()==0))
-            {
-                QMessageBox::information(nullptr,"非audio文件","非audio文件");
-                QFile::remove(files_name_all);
-                QString files_lyric_name=files_name_all;
-                files_lyric_name.chop(3);
-                files_lyric_name.append("lrc");
-                QFile::remove(files_lyric_name);
-            }
-            else
-            {
-                try_play->stop();
-                m_pluginWidget->play_files.append(files_name_all);
-                m_pluginWidget->play_files_simple.append(files_name.append(".mp3"));
-                m_popupWidget->listmodel->setStringList(m_pluginWidget->play_files_simple);
-                m_popupWidget->show_music->setModel(m_popupWidget->listmodel);
-                m_popupWidget->show_music->setEditTriggers(QListView::NoEditTriggers);
-                m_popupWidget->show_music->setSpacing(0);
-                if (m_popupWidget->show_music->currentIndex().row()==-1 && !m_pluginWidget->already_start)
-                {
-                    QModelIndex index=m_popupWidget->listmodel->index(0);
-                    m_popupWidget->show_music->setCurrentIndex(index);
-                    m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
-                    play_main->setMedia(QUrl::fromLocalFile(m_pluginWidget->play_files[m_popupWidget->now_playing]));
-                }
-                else
-                {
-                    QModelIndex index=m_popupWidget->listmodel->index(m_popupWidget->now_playing);
-                    m_popupWidget->show_music->setCurrentIndex(index);
-                    m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
-                }
-            }
-            }
-            if(first_try_time)
-            {
-                first_try_time=false;
-                try_play->setVolume(0);
-                try_play->setMedia(QUrl::fromLocalFile(files_name_all));
-                try_play->play();
-                try_play->setPosition(try_play->duration());
-                try_play->stop();
-                try_play->play();
-                wait_time=3;
-            }
         }
     }
     if (m_pluginWidget->play_files_simple.empty())
@@ -1119,6 +1079,9 @@ void ShowKeyPlugin::timer_update()
         f<<back_color.blue()<<"\n";
         f<<back_color.alpha()<<"\n";
         f<<m_pluginWidget->the_way_of_choose_pos<<"\n";
+        f<<m_pluginWidget->getting_music_widget->set_volume_main->value()<<endl;
+        f<<m_pluginWidget->getting_music_widget->set_music_time_main->value()<<endl;
+        f<<m_pluginWidget->getting_music_widget->set_music_speed_main->value()<<endl;
         f.close();
     }
     if (m_pluginWidget->main_load)
@@ -1315,6 +1278,18 @@ void ShowKeyPlugin::timer_update()
                     m_pluginWidget->setLayout(m_pluginWidget->Layout);
                 }
             }
+            if (load_time==12)
+            {
+                m_pluginWidget->getting_music_widget->set_volume_main->setValue(QString::fromStdString(s).toInt());
+            }
+            if (load_time==13)
+            {
+                m_pluginWidget->getting_music_widget->set_music_time_main->setValue(QString::fromStdString(s).toInt());
+            }
+            if (load_time==14)
+            {
+                m_pluginWidget->getting_music_widget->set_music_speed_main->setValue(QString::fromStdString(s).toInt());
+            }
         }
         load_data.close();
         if (load_time>=1)
@@ -1435,14 +1410,10 @@ void ShowKeyPlugin::timer_update()
     if (m_popupWidget->start_get)
     {
         m_popupWidget->start_get=false;
-        QString name=m_popupWidget->get_music_text->text();
-        if (name!=nullptr)
-        {
-            QString url="http://music.163.com/api/search/get/web?csrf_token=hlpretag=&hlposttag=&s={"+name+"}&type=1&offset=0&total=true&limit=9";
-            QNetworkRequest request;
-            request.setUrl(url);
-            manager->get(request);
-        }
+        m_pluginWidget->getting_music_widget->s_music_name=m_popupWidget->get_music_text->text();
+        QNetworkRequest request;
+        request.setUrl(m_pluginWidget->getting_music_widget->get_music_main(m_pluginWidget->getting_music_widget->s_music_name,m_pluginWidget->getting_music_widget->page));
+        m_pluginWidget->getting_music_widget->manager->get(request);
     }
     if (m_pluginWidget->font_setting)
     {
@@ -1586,127 +1557,27 @@ void ShowKeyPlugin::timer_update()
     m_popupWidget->show_music->setStyleSheet(QString("QListView{background:rgba(0,0,0,0);color:%1}"
                                                      "QListView::item:hover{background:rgba(255,255,255,100);border-left:3px solid rgb(0,85,255);color:%1}"
                                                      "QListView::item:selected{background:rgba(0,170,255,255);color:rgb(255,255,255)}").arg(color.name()));
-}
-void ShowKeyPlugin::getting_music(QNetworkReply *reply)
-{
-    get_music_id.clear();
-    get_music_name.clear();
-    get_music_name_and_id.clear();
-    get_reply=reply->readAll();
-    QJsonParseError error;
-    QJsonDocument json_recv = QJsonDocument::fromJson(get_reply,&error);
-    if(error.error != QJsonParseError::NoError)
+    if ((m_pluginWidget->getting_music_widget->can_get_music_to_list)and(m_pluginWidget->getting_music_widget->doing_getting==false))
     {
-        QMessageBox::information(nullptr,"非法字符","非法字符");
-    }
-    else
-    {
-        QJsonObject totalObject = json_recv.object();
-        QStringList keys = totalObject.keys();
-        if(keys.contains("result"))
+        m_pluginWidget->getting_music_widget->can_get_music_to_list=false;
+        m_pluginWidget->play_files_simple.append(m_pluginWidget->getting_music_widget->launch_file_name+".mp3");
+        m_pluginWidget->play_files.append(m_pluginWidget->getting_music_widget->launch_file_name_all);
+        m_popupWidget->listmodel->setStringList(m_pluginWidget->play_files_simple);
+        m_popupWidget->show_music->setModel(m_popupWidget->listmodel);
+        m_popupWidget->show_music->setEditTriggers(QListView::NoEditTriggers);
+        m_popupWidget->show_music->setSpacing(0);
+        if (m_popupWidget->show_music->currentIndex().row()==-1 && !m_pluginWidget->already_start)
         {
-            QJsonObject resultObject = totalObject["result"].toObject();
-            QStringList resultKeys = resultObject.keys();
-            if(resultKeys.contains("songs"))
-            {
-                QJsonArray array = resultObject["songs"].toArray();
-                for(auto i : array)
-                {
-                    QJsonObject object1 = i.toObject();
-                    get_music_id.append(object1["id"].toInt());
-                    QStringList artistsKeys = object1.keys();
-                    if(artistsKeys.contains("artists"))
-                    {
-                        QJsonArray artistsArray = object1["artists"].toArray();
-                        get_artists.clear();
-                        for(auto j : artistsArray)
-                        {
-                            QJsonObject object2 = j.toObject();
-                            if(get_artists==nullptr)
-                            {
-                                get_artists=object2["name"].toString();
-                            }
-                            else
-                            {
-                                get_artists.append("&");
-                                get_artists.append(object2["name"].toString());
-                            }
-                        }
-                        get_music_name.append(object1["name"].toString()+"--"+get_artists);
-                        get_music_name_and_id.append(object1["name"].toString()+"--"+get_artists+"--"+QString::number(object1["id"].toInt()));
-                    }
-                    else
-                    {
-                        get_music_name.append(object1["name"].toString());
-                        get_music_name_and_id.append(object1["name"].toString()+"--"+QString::number(object1["id"].toInt()));
-                    }
-                }
-                bool bool_ok=false;
-                QString get_choose_name=QInputDialog::getItem(nullptr,"获取","获取",get_music_name_and_id,0,false,&bool_ok);
-                if ((bool_ok)and(get_choose_name!=nullptr))
-                {
-                    system("mkdir ~/.local/lib/music-island-c++p/music_downloads");
-                    QString get_url_name="http://music.163.com/song/media/outer/url?id="+QString::number(get_music_id[get_music_name_and_id.indexOf(get_choose_name)]);
-                    files_name=get_music_name[get_music_name_and_id.indexOf(get_choose_name)].replace("'","").replace('"',"").replace("/","");
-                    files_name_all=getenv("HOME")+QString("/.local/lib/music-island-c++p/music_downloads/"+files_name+".mp3");
-                    QString run1="wget "+get_url_name+" -O '"+files_name_all+"'";
-                    string run2=run1.toStdString();
-                    const char* run3=run2.c_str();
-                    QString url_lyric="http://music.163.com/api/song/lyric?id="+QString::number(get_music_id[get_music_name_and_id.indexOf(get_choose_name)])+"&lv=1&kv=1&tv=-1";
-                    QNetworkRequest request;
-                    request.setUrl(url_lyric);
-                    manager_lyric->get(request);
-                    system(run3);
-                    try_play->setVolume(0);
-                    try_play->setMedia(QUrl::fromLocalFile(files_name_all));
-                    try_play->play();
-                    try_play->setPosition(try_play->duration());
-                    try_play->stop();
-                    try_play->play();
-                    wait_time=3;
-                }
-            }
-            else
-            {
-                QMessageBox::information(nullptr,"无结果","无结果");
-            }
+            QModelIndex index=m_popupWidget->listmodel->index(0);
+            m_popupWidget->show_music->setCurrentIndex(index);
+            m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
+            play_main->setMedia(QUrl::fromLocalFile(m_pluginWidget->play_files[m_popupWidget->now_playing]));
         }
         else
         {
-            QMessageBox::information(nullptr,"无结果","无结果");
+            QModelIndex index=m_popupWidget->listmodel->index(m_popupWidget->now_playing);
+            m_popupWidget->show_music->setCurrentIndex(index);
+            m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
         }
-    }
-}
-void ShowKeyPlugin::getting_lyric(QNetworkReply *reply)
-{
-    get_reply_lyric=reply->readAll();
-    QJsonParseError error;
-    QJsonDocument json_recv = QJsonDocument::fromJson(get_reply_lyric,&error);
-    if(error.error != QJsonParseError::NoError)
-    {
-        QMessageBox::information(nullptr,"无答复","无答复");
-    }
-    else
-    {
-        QJsonObject totalObject=json_recv.object();
-        QStringList keys=totalObject.keys();
-        if(keys.contains("lrc"))
-        {
-            QJsonObject resultObject=totalObject["lrc"].toObject();
-            QStringList resultkeys=resultObject.keys();
-            if(resultkeys.contains("lyric"))
-            {
-                lyric_main=resultObject["lyric"].toString().toStdString();
-            }
-        }
-        QString run1="touch '~/.local/lib/music-island-c++p/music_downloads/"+files_name+".lrc'";
-        string run2=run1.toStdString();
-        const char* run3=run2.c_str();
-        system(run3);
-        string open_files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/music_downloads/")+files_name.toStdString()+".lrc";
-        fstream f;
-        f.open(open_files_name,ios::out);
-        f<<lyric_main;
-        f.close();
     }
 }

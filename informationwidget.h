@@ -11,6 +11,7 @@
 #include<list>
 #include<informationlyric.h>
 #include<QMouseEvent>
+#include<informationgetmusic.h>
 using namespace std;
 class InformationWidget : public QWidget
 {
@@ -32,6 +33,7 @@ public:
     QImage *setting_call_image=new QImage(":/image/image/icon.png");
     QCursor *mouse=new QCursor();
     InformationLyric *lyric_show=new InformationLyric;
+    InformationGetmusic *getting_music_widget=new InformationGetmusic;
     QMenu *menu=new QMenu(this);
     QAction *open_music=new QAction(tr("打开"),this);
     QAction *save_main=new QAction(tr("存储"),this);

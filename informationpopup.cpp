@@ -75,7 +75,7 @@ InformationPopup::InformationPopup(QWidget *parent)
     show_music->move(200,0);
     show_music->resize(300,180);
     show_music->viewport()->installEventFilter(this);
-    resize(size_x_this,180);
+    resize(size_x_this,210);
     QModelIndex index=listmodel->index(now_playing);
     show_music->setCurrentIndex(index);
     show_lyric->move(0,180);

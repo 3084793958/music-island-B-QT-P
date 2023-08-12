@@ -9,14 +9,16 @@ HEADERS += \
     showkeyplugin.h \
     keyscan.h \
     informationpopup.h \
-    informationlyric.h
+    informationlyric.h \
+    informationgetmusic.h
 
 SOURCES += \
     showkeyplugin.cpp \
     informationwidget.cpp \
     keyscan.cpp \
     informationpopup.cpp \
-    informationlyric.cpp
+    informationlyric.cpp \
+    informationgetmusic.cpp
 
 DISTFILES += \
     music-island.json

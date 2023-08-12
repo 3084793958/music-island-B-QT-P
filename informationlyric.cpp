@@ -33,7 +33,7 @@ InformationLyric::InformationLyric(QWidget *parent)
     only_look->setText(nullptr);
     only_look->move(0,0);
     only_look->resize(700,90);
-    only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(0).arg(0).arg(0).arg(0));
+    only_look->setStyleSheet(QString("background:rgba(%1,%2,%3,%4)").arg(255).arg(255).arg(255).arg(10));
     only_look->lower();
     only_look->setEnabled(false);
 }
