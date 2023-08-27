@@ -164,3 +164,26 @@ QT版本 5.15.6
 7.下:下一页(若空，显示页码(多数情况是响应问题，等一等))
 
 }
+## 2023/8/27更新
+### 1.对informationgetmusic增加仅下载音乐功能
+![d1.png](show/d1.png)
+### 2.对itemPopupApplet增加配置歌词功能
+![d2.png](show/d2.png)
+
+![d3.png](show/d3.png)
+#### 点击"配置歌词"配置
+![d4.png](show/d4.png)
+### 3.增加等待执行
+![d5.png](show/d5.png)
+#### 演示
+![d6.gif](show/d6.gif)
+### 4.增加QTimer进行更新歌词,间隔10s,不会储存
+### 5.将播放速度进行更改
+{
+
+原:qreal(int/100)
+
+改:qreal(float/100)
+
+}
+### 6.修复下载后停止播放变成播放的bug
