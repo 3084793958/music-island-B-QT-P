@@ -173,7 +173,7 @@ QT版本 5.15.6
 ![d3.png](show/d3.png)
 #### 点击"配置歌词"配置
 ![d4.png](show/d4.png)
-### 3.增加等待执行
+### 3.增加等待执行,不储存
 ![d5.png](show/d5.png)
 #### 演示
 ![d6.gif](show/d6.gif)
