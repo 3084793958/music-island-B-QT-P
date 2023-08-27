@@ -38,6 +38,10 @@ public:
     QPushButton *up_page=new QPushButton(tr("上"),this);
     QPushButton *down_page=new QPushButton(tr("下"),this);
     QTimer *button_timer=new QTimer();
+    QPushButton *only_music=new QPushButton(tr("仅音乐"),this);
+    QPushButton *only_lyric=new QPushButton(tr("配置歌词"),this);
+    int get_music_way=0;
+    QString find_lyric_use_name=nullptr;
     int page=0;
     QString s_music_name;
     int time,h,m,s;
@@ -57,5 +61,7 @@ public slots:
     void do_not_get_button_click();
     void up_page_button_click();
     void down_page_button_click();
+    void only_music_click();
+    void only_lyric_click();
 };
 #endif // INFORMATIONGETMUSIC_H

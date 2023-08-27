@@ -7,7 +7,7 @@ InformationGetmusic::InformationGetmusic(QWidget *parent)
     connect(manager_lyric,SIGNAL(finished(QNetworkReply *)),this,SLOT(getting_lyric(QNetworkReply *)));
     setWindowFlag(Qt::WindowCloseButtonHint);
     setWindowTitle("music-island试听");
-    resize(500,230);
+    resize(500,270);
     name->move(50,0);
     setvolume->move(0,15);
     set_volume_main->move(50,15);
@@ -59,6 +59,12 @@ InformationGetmusic::InformationGetmusic(QWidget *parent)
     down_page->resize(40,40);
     connect(up_page,SIGNAL(clicked()),this,SLOT(up_page_button_click()));
     connect(down_page,SIGNAL(clicked()),this,SLOT(down_page_button_click()));
+    only_music->move(0,230);
+    only_music->resize(95,40);
+    only_lyric->move(100,230);
+    only_lyric->resize(95,40);
+    connect(only_music,SIGNAL(clicked()),this,SLOT(only_music_click()));
+    connect(only_lyric,SIGNAL(clicked()),this,SLOT(only_lyric_click()));
     button_timer->setInterval(30);
     connect(button_timer,SIGNAL(timeout()),this,SLOT(timer_of_button()));
     button_timer->start();
@@ -78,7 +84,7 @@ void InformationGetmusic::music_value_doing(int value)
 void InformationGetmusic::music_value_speed(int value)
 {
     setmusic_speed->setText("速度\n"+QString::number(value)+"%");
-    try_to_listen->setPlaybackRate(qreal(value/100));
+    try_to_listen->setPlaybackRate(qreal(float(value)/100));
 }
 QString InformationGetmusic::get_music_main(QString s_music_name,int page)
 {
@@ -190,13 +196,16 @@ void InformationGetmusic::getting_lyric(QNetworkReply *reply)
 {
     if (show_reply_music->currentIndex().row()!=-1)
     {
-    QVariant text1 = show_reply_music->selectionModel()->selectedIndexes()[0].data();
+        QVariant text1 = show_reply_music->selectionModel()->selectedIndexes()[0].data();
+        QString files_name_all=getenv("HOME")+QString("/.local/lib/music-island-c++p/music_downloads/"+name_to_filesname[text1.toString()]+".mp3");
+        if (get_music_way!=2)
+        {
     system("mkdir ~/.local/lib/music-island-c++p/music_downloads");
-    QString files_name_all=getenv("HOME")+QString("/.local/lib/music-island-c++p/music_downloads/"+name_to_filesname[text1.toString()]+".mp3");
     QString run1="wget "+reply_music_to_url[text1.toString()].toString()+" -O '"+files_name_all+"'";
     string run2=run1.toStdString();
     const char* run3=run2.c_str();
     system(run3);
+        }
     QByteArray get_reply_lyric=reply->readAll();
     string lyric_main;
     QJsonParseError error;
@@ -218,6 +227,8 @@ void InformationGetmusic::getting_lyric(QNetworkReply *reply)
                 lyric_main=resultObject["lyric"].toString().toStdString();
             }
         }
+        if (get_music_way==0)
+        {
         QString run1="touch '~/.local/lib/music-island-c++p/music_downloads/"+name_to_filesname[text1.toString()]+".lrc'";
         string run2=run1.toStdString();
         const char* run3=run2.c_str();
@@ -227,13 +238,45 @@ void InformationGetmusic::getting_lyric(QNetworkReply *reply)
         f.open(open_files_name,ios::out);
         f<<lyric_main;
         f.close();
+        }
+        if (get_music_way==2)
+        {
+            if (find_lyric_use_name==nullptr)
+            {
+                QMessageBox::information(nullptr,"find_lyric_use_name==nullptr","true");
+            }
+            else
+            {
+                int index;
+                index=find_lyric_use_name.lastIndexOf(".");
+                find_lyric_use_name.truncate(index);
+                find_lyric_use_name.append(".lrc");
+                QString run1="touch '"+find_lyric_use_name+"'";
+                string run2=run1.toStdString();
+                const char* run3=run2.c_str();
+                system(run3);
+                fstream f;
+                f.open(find_lyric_use_name.toStdString(),ios::out);
+                f<<lyric_main;
+                f.close();
+            }
+        }
     }
     launch_file_name=name_to_filesname[text1.toString()];
     launch_file_name_all=files_name_all;
+    if (get_music_way!=2)
+    {
     can_get_music_to_list=true;
+    }
+    else
+    {
+        can_get_music_to_list=false;
+    }
     }
     QMessageBox::information(nullptr,"搞定","pass!");
     hide();
+    get_music_way=0;
+    find_lyric_use_name=nullptr;
     doing_getting=false;
 }
 void InformationGetmusic::try_to_listen_button_play_click()
@@ -297,6 +340,8 @@ void InformationGetmusic::get_it_button_click()
 {
     if (show_reply_music->currentIndex().row()!=-1)
     {
+        get_music_way=0;
+        find_lyric_use_name=nullptr;
     QString url_lyric="http://music.163.com/api/song/lyric?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
     QNetworkRequest request;
     request.setUrl(url_lyric);
@@ -324,4 +369,27 @@ void InformationGetmusic::down_page_button_click()
     QNetworkRequest request;
     request.setUrl(get_music_main(s_music_name,page));
     manager->get(request);
+}
+void InformationGetmusic::only_music_click()
+{
+    if (show_reply_music->currentIndex().row()!=-1)
+    {
+        get_music_way=1;
+        find_lyric_use_name=nullptr;
+    QString url_lyric="http://music.163.com/api/song/lyric?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
+    QNetworkRequest request;
+    request.setUrl(url_lyric);
+    manager_lyric->get(request);
+    }
+}
+void InformationGetmusic::only_lyric_click()
+{
+    if (show_reply_music->currentIndex().row()!=-1)
+    {
+        get_music_way=2;
+    QString url_lyric="http://music.163.com/api/song/lyric?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
+    QNetworkRequest request;
+    request.setUrl(url_lyric);
+    manager_lyric->get(request);
+    }
 }

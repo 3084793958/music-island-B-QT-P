@@ -36,6 +36,12 @@ InformationPopup::InformationPopup(QWidget *parent)
     Qlist_menu->addAction(move_down);
     Qlist_menu->addAction(move_out);
     Qlist_menu->addAction(del_file);
+    Qlist_menu->addAction(get_lyric);
+    wait_to_do->addAction(wait_to_play);
+    wait_to_do->addAction(wait_to_pause);
+    wait_to_do->addAction(wait_to_stop);
+    wait_to_do->addAction(clean_all_wait);
+    menu->addMenu(wait_to_do);
     name->move(50,0);
     setvolume->move(0,15);
     set_volume_main->move(50,15);
@@ -188,6 +194,30 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
     {
         set_back_color=true;
     }
+    if (know_what==wait_to_play)
+    {
+        wait_to_way=1;
+        wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
+        can_wait_to_do=true;
+    }
+    if (know_what==wait_to_pause)
+    {
+        wait_to_way=2;
+        wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
+        can_wait_to_do=true;
+    }
+    if (know_what==wait_to_stop)
+    {
+        wait_to_way=3;
+        wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
+        can_wait_to_do=true;
+    }
+    if (know_what==clean_all_wait)
+    {
+        wait_to_way=4;
+        wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
+        can_wait_to_do=true;
+    }
     }
     else
     {
@@ -231,6 +261,10 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
             if (MBox.clickedButton() == disagreeButton)
             {
             }
+        }
+        if (know_what==get_lyric)
+        {
+            to_get_lyric=true;
         }
     }
 }

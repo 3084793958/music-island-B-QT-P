@@ -47,8 +47,12 @@ public:
     bool can_load=false;
     QColor back_color;
     QString get_artists;
+    QTimer *to_do_timer=new QTimer;
+    QTimer *to_find_lyric=new QTimer;
 public slots:
     void timer_update();
+    void timer_to_do();
+    void find_lyric_timer();
 private:
     InformationWidget *m_pluginWidget;
     QLabel *m_tipsWidget;

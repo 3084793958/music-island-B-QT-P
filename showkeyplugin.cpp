@@ -6,17 +6,28 @@
 #include<QFontDialog>
 #include<QColorDialog>
 #include<QRgba64>
+#include<stdio.h>
 int getRand(int min,int max);
 int getRand(int min,int max)
 {
     return (rand()%(max-min+1))+min;
 }
+void setSrand();
+void setSrand()
+{
+    srand(static_cast<unsigned int>(time(nullptr)));
+}
 ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
     : QObject(parent)
 {
+    setSrand();
     update_timer->setInterval(30);
+    to_find_lyric->setInterval(10000);
     connect(update_timer,SIGNAL(timeout()),this,SLOT(timer_update()));
+    connect(to_do_timer,SIGNAL(timeout()),this,SLOT(timer_to_do()));
+    connect(to_find_lyric,SIGNAL(timeout()),this,SLOT(find_lyric_timer()));
     update_timer->start();
+    to_find_lyric->start();
     connect(play_main,&QMediaPlayer::stateChanged,[=]()
     {
             switch(play_main->state())
@@ -107,8 +118,10 @@ ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
                 }
                 lyricsID=0;
                 QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
-                files_url.chop(3);
-                files_url.append("lrc");
+                int index;
+                index=files_url.lastIndexOf(".");
+                files_url.truncate(index);
+                files_url.append(".lrc");
                 QFile file(files_url);
                 lyric_time.clear();
                 lyric_text.clear();
@@ -151,8 +164,10 @@ ShowKeyPlugin::ShowKeyPlugin(QObject *parent)
                 {
                 lyricsID=0;
                 QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
-                files_url.chop(3);
-                files_url.append("lrc");
+                int index;
+                index=files_url.lastIndexOf(".");
+                files_url.truncate(index);
+                files_url.append(".lrc");
                 QFile file(files_url);
                 lyric_time.clear();
                 lyric_text.clear();
@@ -491,8 +506,9 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     {
     lyricsID=0;
     QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
-    files_url.chop(3);
-    files_url.append("lrc");
+    int index;
+    index=files_url.lastIndexOf(".");
+    files_url.truncate(index);
     QFile file(files_url);
     lyric_time.clear();
     lyric_text.clear();
@@ -524,6 +540,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
         m_pluginWidget->lyric_main_2->setText("");
     }
     }
+    find_lyric_timer();
 }
 QWidget *ShowKeyPlugin::itemWidget(const QString &itemKey)
 {
@@ -624,7 +641,7 @@ void ShowKeyPlugin::timer_update()
         play_main->pause();
         number_help=-100;
     }
-    play_main->setPlaybackRate(qreal(m_popupWidget->set_music_speed_main->value())/100);
+    play_main->setPlaybackRate(qreal(float(m_popupWidget->set_music_speed_main->value())/100));
     if (m_pluginWidget->can_clone)
     {
         m_pluginWidget->can_clone=false;
@@ -650,8 +667,10 @@ void ShowKeyPlugin::timer_update()
         {
         lyricsID=0;
         QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
-        files_url.chop(3);
-        files_url.append("lrc");
+        int index;
+        index=files_url.lastIndexOf(".");
+        files_url.truncate(index);
+        files_url.append(".lrc");
         QFile file(files_url);
         lyric_time.clear();
         lyric_text.clear();
@@ -935,8 +954,10 @@ void ShowKeyPlugin::timer_update()
         }
         QString files_url=file_path;
         QFile::remove(file_path);
-        files_url.chop(3);
-        files_url.append("lrc");
+        int index;
+        index=files_url.lastIndexOf(".");
+        files_url.truncate(index);
+        files_url.append(".lrc");
         QFile file(files_url);
         if (file.open(QIODevice::ReadOnly|QIODevice::Text))
         {
@@ -1368,8 +1389,10 @@ void ShowKeyPlugin::timer_update()
         {
             lyricsID=0;
         QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
-        files_url.chop(3);
-        files_url.append("lrc");
+        int index;
+        index=files_url.lastIndexOf(".");
+        files_url.truncate(index);
+        files_url.append(".lrc");
         QFile file(files_url);
         lyric_time.clear();
         lyric_text.clear();
@@ -1411,6 +1434,15 @@ void ShowKeyPlugin::timer_update()
     {
         m_popupWidget->start_get=false;
         m_pluginWidget->getting_music_widget->s_music_name=m_popupWidget->get_music_text->text();
+        if (m_popupWidget->show_music->currentIndex().row()!=-1)
+        {
+            m_pluginWidget->getting_music_widget->find_lyric_use_name=m_pluginWidget->play_files[m_popupWidget->show_music->currentIndex().row()];
+        }
+        else
+        {
+            m_pluginWidget->getting_music_widget->find_lyric_use_name=nullptr;
+        }
+        m_pluginWidget->getting_music_widget->only_lyric->hide();
         QNetworkRequest request;
         request.setUrl(m_pluginWidget->getting_music_widget->get_music_main(m_pluginWidget->getting_music_widget->s_music_name,m_pluginWidget->getting_music_widget->page));
         m_pluginWidget->getting_music_widget->manager->get(request);
@@ -1566,7 +1598,7 @@ void ShowKeyPlugin::timer_update()
         m_popupWidget->show_music->setModel(m_popupWidget->listmodel);
         m_popupWidget->show_music->setEditTriggers(QListView::NoEditTriggers);
         m_popupWidget->show_music->setSpacing(0);
-        if (m_popupWidget->show_music->currentIndex().row()==-1 && !m_pluginWidget->already_start)
+        if (m_popupWidget->show_music->currentIndex().row()==-1 && !m_pluginWidget->already_start&&m_pluginWidget->play_files.size()==1)
         {
             QModelIndex index=m_popupWidget->listmodel->index(0);
             m_popupWidget->show_music->setCurrentIndex(index);
@@ -1579,5 +1611,111 @@ void ShowKeyPlugin::timer_update()
             m_popupWidget->show_music->setCurrentIndex(index);
             m_popupWidget->now_music_name=m_popupWidget->listmodel->data(index,Qt::DisplayRole).toString();
         }
+    }
+    if(!m_pluginWidget->getting_music_widget->doing_getting)
+    {
+        find_lyric_timer();
+    }
+    if (m_popupWidget->can_wait_to_do)
+    {
+        m_popupWidget->can_wait_to_do=false;
+        if(m_popupWidget->wait_to_way==0)
+        {
+            to_do_timer->stop();
+        }
+        if (m_popupWidget->wait_to_way>0&&m_popupWidget->wait_to_way<=3&&m_popupWidget->wait_time>0)
+        {
+            to_do_timer->setInterval(m_popupWidget->wait_time);
+            to_do_timer->start();
+        }
+    }
+    if (m_popupWidget->to_get_lyric)
+    {
+        m_popupWidget->to_get_lyric=false;
+        if (m_popupWidget->show_music->currentIndex().row()!=-1)
+        {
+            m_pluginWidget->getting_music_widget->s_music_name=m_pluginWidget->play_files_simple[m_popupWidget->show_music->currentIndex().row()];
+            m_pluginWidget->getting_music_widget->find_lyric_use_name=m_pluginWidget->play_files[m_popupWidget->show_music->currentIndex().row()];
+            m_pluginWidget->getting_music_widget->only_lyric->show();
+            QNetworkRequest request;
+            request.setUrl(m_pluginWidget->getting_music_widget->get_music_main(m_pluginWidget->getting_music_widget->s_music_name,m_pluginWidget->getting_music_widget->page));
+            m_pluginWidget->getting_music_widget->manager->get(request);
+        }
+        else
+        {
+            m_pluginWidget->getting_music_widget->find_lyric_use_name=nullptr;
+        }
+    }
+}
+void ShowKeyPlugin::timer_to_do()
+{
+    if (m_popupWidget->wait_to_way==1)
+    {
+        not_do_anything=true;
+        m_pluginWidget->already_start=true;
+        number_help=-5;
+        play_main->play();
+        not_do_anything=false;
+    }
+    if (m_popupWidget->wait_to_way==2)
+    {
+        not_do_anything=true;
+        m_pluginWidget->already_start=false;
+        number_help=95;
+        not_do_anything=false;
+    }
+    if (m_popupWidget->wait_to_way==3)
+    {
+        not_do_anything=true;
+        m_pluginWidget->already_start=false;
+        play_main->stop();
+        not_do_anything=false;
+    }
+    to_do_timer->stop();
+}
+void ShowKeyPlugin::find_lyric_timer()
+{
+    if (lyric_time.isEmpty())
+    {
+    QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
+    int index;
+    index=files_url.lastIndexOf(".");
+    files_url.truncate(index);
+    files_url.append(".lrc");
+    QFile file(files_url);
+    lyric_time.clear();
+    lyric_text.clear();
+    m_popupWidget->show_lyric->setText("");
+    m_popupWidget->show_lyric_next->setText("");
+    m_pluginWidget->lyric_main_1->setText("");
+    m_pluginWidget->lyric_main_2->setText("");
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        lyricsID=0;
+        ifstream load_data;
+        load_data.open(files_url.toStdString(),ios::in);
+        string s;
+        QRegularExpression regularExpression("\\[(\\d+)?:(\\d+)?(\\.\\d+)?\\](.*)?");
+        while(getline(load_data,s))
+        {
+            int index = 0;
+            QRegularExpressionMatch match;
+            match = regularExpression.match(QString::fromStdString(s),index);
+            if(match.hasMatch())
+            {
+                int totalTime = match.captured(1).toInt() * 60000 + match.captured(2).toInt() * 1000;
+                QString currentText =QString::fromStdString(match.captured(4).toStdString());
+                lyric_text.push_back(currentText);
+                lyric_time.push_back(totalTime);
+            }
+        }
+    }
+    else
+    {
+        m_popupWidget->show_lyric->setText("无歌词");
+        m_popupWidget->show_lyric_next->setText("");
+        m_pluginWidget->lyric_main_1->setText("无歌词");
+        m_pluginWidget->lyric_main_2->setText("");
+    }
     }
 }

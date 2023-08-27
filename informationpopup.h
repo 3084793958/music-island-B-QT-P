@@ -64,6 +64,8 @@ public:
     QAction *move_down=new QAction(tr("下移"),this);
     QAction *move_out=new QAction(tr("移出列表"),this);
     QAction *del_file=new QAction(tr("删除文件"),this);
+    QAction *get_lyric=new QAction(tr("配置歌词"),this);
+    bool to_get_lyric=false;
     bool up_this=false;
     bool down_this=false;
     bool out_this=false;
@@ -71,6 +73,14 @@ public:
     bool start_get=false;
     bool set_lyric_font=false;
     bool set_back_color=false;
+    QMenu *wait_to_do=new QMenu(tr("等待执行"),this);
+    QAction *wait_to_play=new QAction(tr("播放"),this);
+    QAction *wait_to_pause=new QAction(tr("暂停"),this);
+    QAction *wait_to_stop=new QAction(tr("停止"),this);
+    QAction *clean_all_wait=new QAction(tr("清除执行"),this);
+    bool can_wait_to_do=false;
+    int wait_to_way=0;
+    int wait_time=0;
 public slots:
     void qslider_doing(int value);
     void music_value_doing(int value);
