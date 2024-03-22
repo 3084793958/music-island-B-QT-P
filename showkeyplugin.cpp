@@ -1675,7 +1675,7 @@ void ShowKeyPlugin::timer_to_do()
 }
 void ShowKeyPlugin::find_lyric_timer()
 {
-    if (lyric_time.isEmpty())
+    if (lyric_time.isEmpty()&&!m_pluginWidget->play_files.isEmpty())
     {
     QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];
     int index;
