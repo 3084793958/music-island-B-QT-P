@@ -187,3 +187,16 @@ QT版本 5.15.6
 
 }
 ### 6.修复下载后停止播放变成播放的bug
+
+## 2024.3.23
+就一行更新:(L1678)
+
+原:if (lyric_time.isEmpty())
+
+现:if (lyric_time.isEmpty()&&!m_pluginWidget->play_files.isEmpty())
+
+崩溃原因:由于m_pluginWidget->play_files在第一次运行时是空的
+
+所以在下一行中"""QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];"""
+
+会报错,无论m_popupWidget->now_playing取何值(不知道之前是怎么过的)
