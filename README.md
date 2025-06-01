@@ -188,15 +188,21 @@ QT版本 5.15.6
 }
 ### 6.修复下载后停止播放变成播放的bug
 
-## 2024.3.23
-就一行更新:(L1678)
+## 2025/6/2更新
+### 修复无法爬去id过长的歌曲的bug
 
-原:if (lyric_time.isEmpty())
+我本以为int就够用了,没想到网易云单曲能超21亿
 
-现:if (lyric_time.isEmpty()&&!m_pluginWidget->play_files.isEmpty())
+表现:无法爬取id大于2147483647的歌曲(例如2699124989)
 
-崩溃原因:由于m_pluginWidget->play_files在第一次运行时是空的
+解决过程:
 
-所以在下一行中"""QString files_url=m_pluginWidget->play_files[m_popupWidget->now_playing];"""
+我使用QJsonObject来储存歌曲信息
 
-会报错,无论m_popupWidget->now_playing取何值(不知道之前是怎么过的)
+//本来想用toLong()来解决的,但不知道为什么,QT没有这个函数
+
+对于超出int最大值(2147483647)的value,QJsonObject会以double储存
+
+但double是双位浮点型,不适合以后的运算,故将其转为long储存
+
+使用static_cast<long>()强制转换

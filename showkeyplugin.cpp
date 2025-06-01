@@ -1070,7 +1070,7 @@ void ShowKeyPlugin::timer_update()
     if (m_pluginWidget->main_save)
     {
         m_pluginWidget->main_save=false;
-        system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
+        system("mkdir ~/.local/lib;mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
         string files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/data.txt");
         string files_name2=getenv("HOME")+string("/.local/lib/music-island-c++p/data2.txt");
         fstream f;
@@ -1108,7 +1108,7 @@ void ShowKeyPlugin::timer_update()
     if (m_pluginWidget->main_load)
     {
         can_load=false;
-        system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
+        system("mkdir ~/.local/lib;mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
         m_pluginWidget->main_load=false;
         m_pluginWidget->already_start=false;
         m_popupWidget->now_music_name=nullptr;
@@ -1429,6 +1429,7 @@ void ShowKeyPlugin::timer_update()
         }
         }
         }
+        play_main->stop();
     }
     if (m_popupWidget->start_get)
     {

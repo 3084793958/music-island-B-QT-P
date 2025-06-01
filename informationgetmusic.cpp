@@ -128,9 +128,9 @@ void InformationGetmusic::getting_music(QNetworkReply *reply)
                 for(auto i : array)
                 {
                     QJsonObject object1 = i.toObject();
-                    if (object1["fee"].toInt()!=1)
+                    if (!object1.contains("fee")||object1["fee"].toInt()!=1)
                     {
-                    get_music_id.append(object1["id"].toInt());
+                    get_music_id.append(static_cast<long>(object1["id"].toDouble()));//int不够用
                     QStringList artistsKeys = object1.keys();
                     if(artistsKeys.contains("artists"))
                     {
@@ -149,18 +149,18 @@ void InformationGetmusic::getting_music(QNetworkReply *reply)
                                 get_artists.append(object2["name"].toString());
                             }
                         }
-                        QString music_name=QString(object1["name"].toString()+"--"+get_artists+"--"+QString::number(object1["id"].toInt())).replace("'","").replace('"',"").replace("/","");
+                        QString music_name=QString(object1["name"].toString()+"--"+get_artists+"--"+QString::number(static_cast<long>(object1["id"].toDouble()))).replace("'","").replace('"',"").replace("/","");
                         QString files_name=QString(object1["name"].toString()+"--"+get_artists).replace("'","").replace('"',"").replace("/","");
-                        QString music_id=QString::number(object1["id"].toInt());
+                        QString music_id=QString::number(static_cast<long>(object1["id"].toDouble()));
                         reply_music_list.append(music_name);
                         name_to_filesname.insert(music_name,files_name);
                         reply_music_to_url.insert(music_name,QUrl("http://music.163.com/song/media/outer/url?id="+music_id));
                     }
                     else
                     {
-                        QString music_name=QString(object1["name"].toString()+"--"+QString::number(object1["id"].toInt())).replace("'","").replace('"',"").replace("/","");
+                        QString music_name=QString(object1["name"].toString()+"--"+QString::number(static_cast<long>(object1["id"].toDouble()))).replace("'","").replace('"',"").replace("/","");
                         QString files_name=QString(object1["name"].toString()+"--").replace("'","").replace('"',"").replace("/","");
-                        QString music_id=QString::number(object1["id"].toInt());
+                        QString music_id=QString::number(static_cast<long>(object1["id"].toDouble()));
                         reply_music_list.append(music_name);
                         name_to_filesname.insert(music_name,files_name);
                         reply_music_to_url.insert(music_name,QUrl("http://music.163.com/song/media/outer/url?id="+music_id));

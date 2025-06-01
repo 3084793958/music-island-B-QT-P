@@ -31,7 +31,7 @@ public:
     QListView *show_reply_music=new QListView(this);
     QStringList reply_music_list;
     QMap<QString,QUrl> reply_music_to_url;
-    QList<int> get_music_id;
+    QList<long> get_music_id;
     QStringListModel *listmodel=new QStringListModel();
     QPushButton *get_it_button=new QPushButton(tr("选中"),this);
     QPushButton *do_not_get_button=new QPushButton(tr("取消"),this);
