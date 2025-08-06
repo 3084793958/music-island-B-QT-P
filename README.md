@@ -206,3 +206,11 @@ QT版本 5.15.6
 但double是双位浮点型,不适合以后的运算,故将其转为long储存
 
 使用static_cast<long>()强制转换
+## 2025/8/6更新
+### 修复部分歌曲无法获取歌词的问题
+
+歌词url由"http://music.163.com/api/song/lyric?id="改为"http://music.163.com/api/song/media?id="
+
+新url结构与旧url结构不同
+
+//旧url为{lrc{lyric{}}},新url为{lyric{}}

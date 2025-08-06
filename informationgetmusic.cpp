@@ -216,12 +216,14 @@ void InformationGetmusic::getting_lyric(QNetworkReply *reply)
     }
     else
     {
-        QJsonObject totalObject=json_recv.object();
-        QStringList keys=totalObject.keys();
-        if(keys.contains("lrc"))
+        //QJsonObject totalObject=json_recv.object();
+        //QStringList keys=totalObject.keys();
+        if(true/*keys.contains("lrc")*/)
         {
-            QJsonObject resultObject=totalObject["lrc"].toObject();
-            QStringList resultkeys=resultObject.keys();
+            //QJsonObject resultObject=totalObject["lrc"].toObject();
+            //QStringList resultkeys=resultObject.keys();
+            QJsonObject resultObject = json_recv.object();
+            QStringList resultkeys = resultObject.keys();
             if(resultkeys.contains("lyric"))
             {
                 lyric_main=resultObject["lyric"].toString().toStdString();
@@ -342,7 +344,7 @@ void InformationGetmusic::get_it_button_click()
     {
         get_music_way=0;
         find_lyric_use_name=nullptr;
-    QString url_lyric="http://music.163.com/api/song/lyric?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
+    QString url_lyric="http://music.163.com/api/song/media?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
     QNetworkRequest request;
     request.setUrl(url_lyric);
     manager_lyric->get(request);
@@ -376,7 +378,7 @@ void InformationGetmusic::only_music_click()
     {
         get_music_way=1;
         find_lyric_use_name=nullptr;
-    QString url_lyric="http://music.163.com/api/song/lyric?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
+    QString url_lyric="http://music.163.com/api/song/media?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
     QNetworkRequest request;
     request.setUrl(url_lyric);
     manager_lyric->get(request);
@@ -387,7 +389,7 @@ void InformationGetmusic::only_lyric_click()
     if (show_reply_music->currentIndex().row()!=-1)
     {
         get_music_way=2;
-    QString url_lyric="http://music.163.com/api/song/lyric?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
+    QString url_lyric="http://music.163.com/api/song/media?id="+QString::number(get_music_id[show_reply_music->currentIndex().row()])+"&lv=1&kv=1&tv=-1";
     QNetworkRequest request;
     request.setUrl(url_lyric);
     manager_lyric->get(request);
