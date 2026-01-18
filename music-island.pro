@@ -1,4 +1,4 @@
-QT += core gui widgets x11extras multimedia multimediawidgets
+QT += core gui widgets x11extras multimedia multimediawidgets dbus
 LIBS += -lX11  -lXtst
 TEMPLATE = lib
 CONFIG += plugin

@@ -214,3 +214,9 @@ QT版本 5.15.6
 新url结构与旧url结构不同
 
 //旧url为{lrc{lyric{}}},新url为{lyric{}}
+
+## 2026/1/18
+### 引出dbus
+QDBusMessage dbus_signal1 = QDBusMessage::createSignal("/music/island","music.island","lyric1");
+
+QDBusMessage dbus_signal2 = QDBusMessage::createSignal("/music/island","music.island","lyric2");

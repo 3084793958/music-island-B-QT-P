@@ -7,6 +7,8 @@
 #include<QColorDialog>
 #include<QRgba64>
 #include<stdio.h>
+#include <QDBusConnection>
+#include <QDBusMessage>
 int getRand(int min,int max);
 int getRand(int min,int max)
 {
@@ -230,7 +232,7 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     m_proxyInter->itemAdded(this,pluginName());
     }
     load_time=-1;
-    system("mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
+    system("mkdir ~/.local/lib;mkdir ~/.local/lib/music-island-c++p;touch ~/.local/lib/music-island-c++p/data.txt;touch ~/.local/lib/music-island-c++p/data2.txt");
     string files_name=getenv("HOME")+string("/.local/lib/music-island-c++p/data.txt");
     string files_name2=getenv("HOME")+string("/.local/lib/music-island-c++p/data2.txt");
     ifstream load_data;
@@ -1507,13 +1509,32 @@ void ShowKeyPlugin::timer_update()
                 m_popupWidget->show_lyric_next->setText(lyric_text.at(lyricsID));
                 m_pluginWidget->lyric_main_1->setText(lyric_text.at(lyricsID-1));
                 m_pluginWidget->lyric_main_2->setText(lyric_text.at(lyricsID));
+                QDBusMessage dbus_signal1 = QDBusMessage::createSignal(
+                            "/music/island",
+                            "music.island",
+                            "lyric1");
+                QDBusMessage dbus_signal2 = QDBusMessage::createSignal(
+                            "/music/island",
+                            "music.island",
+                            "lyric2");
+                dbus_signal1 << lyric_text.at(lyricsID-1);
+                dbus_signal2 << lyric_text.at(lyricsID);
+                QDBusConnection::sessionBus().send(dbus_signal1);
+                QDBusConnection::sessionBus().send(dbus_signal2);
             }
             else
             {
+                if (lyric_time.size() <= lyricsID) return;
                 m_popupWidget->show_lyric->setText(lyric_text.at(lyricsID));
                 m_popupWidget->show_lyric_next->setText("");
                 m_pluginWidget->lyric_main_1->setText(lyric_text.at(lyricsID));
                 m_pluginWidget->lyric_main_2->setText("");
+                QDBusMessage dbus_signal1 = QDBusMessage::createSignal(
+                            "/music/island",
+                            "music.island",
+                            "lyric1");
+                dbus_signal1 << lyric_text.at(lyricsID);
+                QDBusConnection::sessionBus().send(dbus_signal1);
             }
         }
     }
