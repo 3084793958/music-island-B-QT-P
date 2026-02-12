@@ -56,10 +56,6 @@ public:
     bool next_music=false;
     bool back_music=false;
     bool already_start_this=false;
-    bool main_save=false;
-    bool main_load=false;
-    bool color_setting=false;
-    bool font_setting=false;
     bool can_not_use=false;
     int the_way_of_choose_type=1;
     int the_way_of_choose_pos=1;
@@ -67,6 +63,11 @@ public:
     QLabel *lyric_main_1=new QLabel(lyric_show);
     QLabel *lyric_main_2=new QLabel(lyric_show);
     QLabel *show_name=new QLabel(lyric_show);
+signals:
+    void load();
+    void save();
+    void font_setting();
+    void color_setting();
 public slots:
     void timer_of_button();
 };

@@ -197,19 +197,19 @@ void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
     }
     if (know_what==save_main)
     {
-        main_save=true;
+        emit save();
     }
     if (know_what==load_main)
     {
-        main_load=true;
+        emit load();
     }
     if (know_what==set_font)
     {
-        font_setting=true;
+        emit font_setting();
     }
     if (know_what==set_color)
     {
-        color_setting=true;
+        emit color_setting();
     }
     if (know_what==top_panel)
     {

@@ -15,6 +15,7 @@ class ShowKeyPlugin : public QObject, PluginsItemInterface
     Q_PLUGIN_METADATA(IID "com.deepin.dock.PluginsItemInterface" FILE "music-island.json")
 public:
     explicit ShowKeyPlugin(QObject *parent = nullptr);
+    ~ShowKeyPlugin() override;
     const QString pluginName() const override;
     void init(PluginProxyInterface *proxyInter) override;
     QWidget *itemWidget(const QString &itemKey) override;
@@ -57,6 +58,12 @@ private:
     InformationWidget *m_pluginWidget;
     QLabel *m_tipsWidget;
     InformationPopup *m_popupWidget;
+public:
+    void load();
+    void save();
+    void color_setting();
+    void font_setting();
+    void disable_plugin();
 };
 
 #endif // SHOWKEYPLUGIN_H
