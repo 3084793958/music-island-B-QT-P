@@ -13,7 +13,7 @@ public:
     bool can_get_music_to_list=false;
     QString launch_file_name;
     QString launch_file_name_all;
-    QMediaPlayer *try_to_listen=new QMediaPlayer();
+    QMediaPlayer *try_to_listen=new QMediaPlayer(this);
     bool doing_getting=false;
     QLabel *name=new QLabel(tr("music island试听"),this);
     QLabel *setvolume=new QLabel(tr("设置音量\n100%"),this);
@@ -32,12 +32,12 @@ public:
     QStringList reply_music_list;
     QMap<QString,QUrl> reply_music_to_url;
     QList<long> get_music_id;
-    QStringListModel *listmodel=new QStringListModel();
+    QStringListModel *listmodel=new QStringListModel(this);
     QPushButton *get_it_button=new QPushButton(tr("选中"),this);
     QPushButton *do_not_get_button=new QPushButton(tr("取消"),this);
     QPushButton *up_page=new QPushButton(tr("上"),this);
     QPushButton *down_page=new QPushButton(tr("下"),this);
-    QTimer *button_timer=new QTimer();
+    QTimer *button_timer=new QTimer(this);
     QPushButton *only_music=new QPushButton(tr("仅音乐"),this);
     QPushButton *only_lyric=new QPushButton(tr("配置歌词"),this);
     int get_music_way=0;

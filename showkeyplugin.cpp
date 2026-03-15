@@ -227,8 +227,9 @@ ShowKeyPlugin::~ShowKeyPlugin()
     update_timer->stop();
     to_find_lyric->stop();
     to_do_timer->stop();
-    this->disconnect();
-    this->deleteLater();
+    if (m_pluginWidget) m_pluginWidget->deleteLater();
+    if (m_tipsWidget) m_tipsWidget->deleteLater();
+    if (m_popupWidget) m_popupWidget->deleteLater();
 }
 const QString ShowKeyPlugin::pluginName() const
 {
@@ -244,10 +245,10 @@ void ShowKeyPlugin::init(PluginProxyInterface *proxyInter)
     m_pluginWidget = new InformationWidget;
     m_tipsWidget = new QLabel;
     m_popupWidget = new InformationPopup;
-    connect(m_pluginWidget, &InformationWidget::save, this, &ShowKeyPlugin::save);
-    connect(m_pluginWidget, &InformationWidget::load, this, &ShowKeyPlugin::load);
-    connect(m_pluginWidget, &InformationWidget::color_setting, this, &ShowKeyPlugin::color_setting);
-    connect(m_pluginWidget, &InformationWidget::font_setting, this, &ShowKeyPlugin::font_setting);
+    connect(m_pluginWidget, &InformationWidget::save, this, [=]{this->save();});
+    connect(m_pluginWidget, &InformationWidget::load, this, [=]{this->load();});
+    connect(m_pluginWidget, &InformationWidget::color_setting, this, [=]{this->color_setting();});
+    connect(m_pluginWidget, &InformationWidget::font_setting, this, [=]{this->font_setting();});
     if (!pluginIsDisable())
     {
         if (m_proxyInter) m_proxyInter->itemAdded(this, pluginName());
@@ -290,6 +291,90 @@ void ShowKeyPlugin::pluginStateSwitched()
         if (m_proxyInter) m_proxyInter->itemAdded(this, pluginName());
     }
 }
+bool ShowKeyPlugin::pluginIsAllowUnload()
+{
+    return true;
+}
+void ShowKeyPlugin::pluginUnload()
+{
+    this->ShowKeyPlugin::~ShowKeyPlugin();
+}
+void ShowKeyPlugin::pluginGetCarrierQMenu(Carrier_Type carrier_type, QMenu *menu, P_Sender * const action_sender)
+{
+    if (carrier_type == PluginsItemInterface::Carrier_Type::Plugin_Item)
+    {
+        m_pluginWidget->set_carrier_menu(menu, action_sender);
+    }
+    else if (carrier_type == PluginsItemInterface::Carrier_Type::Plugin_Popup)
+    {
+        m_popupWidget->set_carrier_menu(menu, action_sender);
+    }
+}
+QSize ShowKeyPlugin::pluginSetWidgetSize(PluginsItemInterface::Carrier_Type carrier_type, bool *isValid)
+{
+    switch (carrier_type)
+    {
+    case PluginsItemInterface::Carrier_Type::Unknown:
+    {
+        *isValid = false;
+        return QSize();
+    }
+    case PluginsItemInterface::Carrier_Type::Plugin_Item:
+    {
+        *isValid = true;
+        return QSize();
+    }
+    case PluginsItemInterface::Carrier_Type::Plugin_Tips:
+    {
+        *isValid = true;
+        return QSize();
+    }
+    case PluginsItemInterface::Carrier_Type::Plugin_Popup:
+    {
+        *isValid = true;
+        if (m_pluginWidget->play_files_simple.empty())
+        {
+            m_popupWidget->size_x_this = 200;
+        }
+        else
+        {
+            m_popupWidget->size_x_this = 500;
+        }
+        if (m_popupWidget->size_x_this == 200)
+        {
+            return QSize(200,180);
+        }
+        else
+        {
+            return QSize(500, 210);
+        }
+    }
+    }
+}
+void ShowKeyPlugin::pluginGetIsMouseInPluginCarrier(PluginsItemInterface::Carrier_Type carrier_type, bool result)
+{
+    if (carrier_type == PluginsItemInterface::Carrier_Type::Plugin_Item)
+    {
+        m_pluginWidget->getIsMouseInPluginCarrier(result);
+    }
+}
+void ShowKeyPlugin::pluginGetSender(P_Sender * const update_sender, P_Sender * const send_data_sender)
+{
+    m_update_sender = update_sender;
+    (void) send_data_sender;
+}
+bool ShowKeyPlugin::pluginSetShowCarrierCloseButton(PluginsItemInterface::Carrier_Type carrier_type, bool *isValid)
+{
+    if (carrier_type == PluginsItemInterface::Carrier_Type::Plugin_Tips || carrier_type == PluginsItemInterface::Carrier_Type::Plugin_Popup)
+    {
+        *isValid = true;
+    }
+    else
+    {
+        *isValid = false;
+    }
+    return false;
+}
 QWidget *ShowKeyPlugin::itemTipsWidget(const QString &itemKey)
 {
     Q_UNUSED(itemKey);
@@ -308,6 +393,14 @@ QWidget *ShowKeyPlugin::itemPopupApplet(const QString &itemKey)
     Q_UNUSED(itemKey);
     if (m_pluginWidget->can_popup)
     {
+        if (m_pluginWidget->play_files_simple.empty())
+        {
+            m_popupWidget->size_x_this = 200;
+        }
+        else
+        {
+            m_popupWidget->size_x_this = 500;
+        }
         if (m_popupWidget->size_x_this==200)
         {
             m_popupWidget->setMinimumSize(200, 180);
@@ -318,10 +411,18 @@ QWidget *ShowKeyPlugin::itemPopupApplet(const QString &itemKey)
             m_popupWidget->setMinimumSize(500, 210);
             m_popupWidget->resize(500,210);
         }
+        if (m_update_sender)
+        {
+            m_update_sender->Send();
+        }
         return m_popupWidget;
     }
     else
     {
+        if (m_update_sender)
+        {
+            m_update_sender->Send();
+        }
         return nullptr;
     }
 }
@@ -441,11 +542,25 @@ void ShowKeyPlugin::timer_update()
     }
     if (m_pluginWidget->play_files_simple.empty())
     {
-        m_popupWidget->size_x_this=200;
+        if (m_popupWidget->size_x_this != 200)
+        {
+            m_popupWidget->size_x_this = 200;
+            if (m_update_sender)
+            {
+                m_update_sender->Send();
+            }
+        }
     }
     else
     {
-        m_popupWidget->size_x_this=500;
+        if (m_popupWidget->size_x_this != 500)
+        {
+            m_popupWidget->size_x_this = 500;
+            if (m_update_sender)
+            {
+                m_update_sender->Send();
+            }
+        }
     }
     if ((m_pluginWidget->back_music)and(m_popupWidget->now_music_name!=nullptr))
     {

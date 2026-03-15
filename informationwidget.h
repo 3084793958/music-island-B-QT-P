@@ -1,5 +1,6 @@
 #ifndef INFORMATIONWIDGET_H
 #define INFORMATIONWIDGET_H
+#include "interfaces/pluginsiteminterface.h"
 #include<QWidget>
 #include<QTimer>
 #include<QLabel>
@@ -18,17 +19,18 @@ class InformationWidget : public QWidget
     Q_OBJECT
 public:
     explicit InformationWidget(QWidget *parent = nullptr);
+    ~InformationWidget();
     void contextMenuEvent(QContextMenuEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
-    QTimer *button_timer=new QTimer();
-    QHBoxLayout *Layout=new QHBoxLayout;
+    QTimer *button_timer=new QTimer(this);
+    QHBoxLayout *Layout=new QHBoxLayout(this);
     QLabel *button_back=new QLabel(this);
-    QMovie *button_back_movie=new QMovie;
+    QMovie *button_back_movie=new QMovie(this);
     QLabel *button_next=new QLabel(this);
-    QMovie *button_next_movie=new QMovie;
+    QMovie *button_next_movie=new QMovie(this);
     QLabel *button_start_or_stop=new QLabel(this);
-    QMovie *button_start_or_stop_movie=new QMovie;
+    QMovie *button_start_or_stop_movie=new QMovie(this);
     QLabel *the_setting_call=new QLabel(this);
     QImage *setting_call_image=new QImage(":/image/image/icon.png");
     QCursor *mouse=new QCursor();
@@ -63,6 +65,12 @@ public:
     QLabel *lyric_main_1=new QLabel(lyric_show);
     QLabel *lyric_main_2=new QLabel(lyric_show);
     QLabel *show_name=new QLabel(lyric_show);
+    QAction *item_carrier_menu = nullptr;
+    void getIsMouseInPluginCarrier(bool result);
+    bool Easy_Desktop_control = false;
+    bool mouse_in_carrier = false;
+    P_Sender *menu_sender = nullptr;
+    void set_carrier_menu(QMenu *carrier_menu, P_Sender * const m_menu_sender);
 signals:
     void load();
     void save();

@@ -3,10 +3,10 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
 
-Display * m_display;
-XRecordRange * range;
-XRecordContext m_context;
-XRecordClientSpec clients;
+static Display * m_display;
+static XRecordRange * range;
+static XRecordContext m_context;
+static XRecordClientSpec clients;
 
 static void recordEventCallback(char *, XRecordInterceptData *);
 
@@ -38,7 +38,7 @@ void keyScan::registerd()
 
 void keyScan::run()
 {
-    XRecordEnableContext( m_display, m_context,recordEventCallback,(XPointer)this);
+    XRecordEnableContext( m_display, m_context,recordEventCallback,reinterpret_cast<XPointer>(this));
 }
 
 
@@ -48,26 +48,26 @@ void recordEventCallback(char * ptr, XRecordInterceptData * data )
     if ( data->category == XRecordFromServer )
     {
         data->client_swapped = false;
-        xEvent * event = (xEvent *) data->data;
+        xEvent * event = reinterpret_cast<xEvent *>(data->data);
         switch (event->u.u.type) {
         case ButtonPress:
         {
-            emit ((keyScan*)ptr)->sig_buttonPressed(event->u.u.detail);
+            emit reinterpret_cast<keyScan*>(ptr)->sig_buttonPressed(event->u.u.detail);
         }
             break;
         case ButtonRelease:
         {
-            emit ((keyScan*)ptr)->sig_buttonRelease(event->u.u.detail);
+            emit reinterpret_cast<keyScan*>(ptr)->sig_buttonRelease(event->u.u.detail);
         }
             break;
         case KeyPress:
         {
-            emit ((keyScan*)ptr)->sig_keyPressed(((unsigned char*)data->data)[1]);
+            emit reinterpret_cast<keyScan*>(ptr)->sig_keyPressed((static_cast<unsigned char*>(data->data))[1]);
         }
             break;    
         case KeyRelease:
         {
-            emit ((keyScan*)ptr)->sig_keyRelease(((unsigned char*)data->data)[1]);
+            emit reinterpret_cast<keyScan*>(ptr)->sig_keyRelease((static_cast<unsigned char*>(data->data))[1]);
         }
             break;
         default:

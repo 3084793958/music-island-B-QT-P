@@ -19,7 +19,7 @@ public:
     bool lyric_can_move=true;
     bool down_to_up=true;
     QCursor *mouse=new QCursor();
-    QTimer *button_timer=new QTimer();
+    QTimer *button_timer=new QTimer(this);
     QPushButton *only_look=new QPushButton(this);
 public slots:
     void timer_of_button();

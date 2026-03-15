@@ -10,7 +10,10 @@ HEADERS += \
     keyscan.h \
     informationpopup.h \
     informationlyric.h \
-    informationgetmusic.h
+    informationgetmusic.h \
+    interfaces/constants.h \
+    interfaces/pluginproxyinterface.h \
+    interfaces/pluginsiteminterface.h
 
 SOURCES += \
     showkeyplugin.cpp \
@@ -18,7 +21,8 @@ SOURCES += \
     keyscan.cpp \
     informationpopup.cpp \
     informationlyric.cpp \
-    informationgetmusic.cpp
+    informationgetmusic.cpp \
+    interfaces/pluginsiteminterface.cpp
 
 DISTFILES += \
     music-island.json

@@ -1,5 +1,6 @@
 #ifndef INFORMATIONPOPUP_H
 #define INFORMATIONPOPUP_H
+#include "interfaces/pluginsiteminterface.h"
 #include<QWidget>
 #include<QLabel>
 #include<QSlider>
@@ -46,7 +47,7 @@ public:
     int the_way_of_lyric=2;
     QListView *show_music=new QListView(this);
     QStringList play_files;
-    QStringListModel *listmodel=new QStringListModel();
+    QStringListModel *listmodel=new QStringListModel(this);
     int now_music_long;
     QString now_music_name;
     int now_playing=0;
@@ -81,6 +82,9 @@ public:
     bool can_wait_to_do=false;
     int wait_to_way=0;
     int wait_time=0;
+    QAction *popup_carrier_menu = nullptr;
+    P_Sender *menu_sender = nullptr;
+    void set_carrier_menu(QMenu *carrier_menu, P_Sender * const m_menu_sender);
 public slots:
     void qslider_doing(int value);
     void music_value_doing(int value);

@@ -22,7 +22,7 @@ void InformationWidget::timer_of_button()
         can_popup=false;
         if (on_left_mouse==true)
         {
-            if (!can_not_use)
+            if (!can_not_use && ((Easy_Desktop_control && mouse_in_carrier) || !Easy_Desktop_control))
             {
             back_music=true;
             }
@@ -39,7 +39,7 @@ void InformationWidget::timer_of_button()
         can_popup=false;
         if (on_left_mouse==true)
         {
-            if (!can_not_use)
+            if (!can_not_use && ((Easy_Desktop_control && mouse_in_carrier) || !Easy_Desktop_control))
             {
             next_music=true;
             }
@@ -61,7 +61,7 @@ void InformationWidget::timer_of_button()
         }
         if (on_left_mouse==true)
         {
-            if (!can_not_use)
+            if (!can_not_use && ((Easy_Desktop_control && mouse_in_carrier) || !Easy_Desktop_control))
             {
             if (!play_files.empty())
             {
@@ -177,6 +177,17 @@ InformationWidget::InformationWidget(QWidget *parent)
     lyric_show->move(screenRect.width()/2-350,screenRect.height()-175);
     lyric_show->show();
 }
+InformationWidget::~InformationWidget()
+{
+    if (lyric_show)
+    {
+        lyric_show->deleteLater();
+    }
+    if (getting_music_widget)
+    {
+        getting_music_widget->deleteLater();
+    }
+}
 void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     QAction *know_what=menu->exec(mapToGlobal(event->pos()));
@@ -195,37 +206,37 @@ void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
             }
         }
     }
-    if (know_what==save_main)
+    else if (know_what==save_main)
     {
         emit save();
     }
-    if (know_what==load_main)
+    else if (know_what==load_main)
     {
         emit load();
     }
-    if (know_what==set_font)
+    else if (know_what==set_font)
     {
         emit font_setting();
     }
-    if (know_what==set_color)
+    else if (know_what==set_color)
     {
         emit color_setting();
     }
-    if (know_what==top_panel)
+    else if (know_what==top_panel)
     {
         the_way_of_choose_type=1;
         button_start_or_stop_movie->setScaledSize(QSize(23, 23));
         top_panel->setIconVisibleInMenu(true);
         dock->setIconVisibleInMenu(false);
     }
-    if (know_what==dock)
+    else if (know_what==dock)
     {
         the_way_of_choose_type=2;
         button_start_or_stop_movie->setScaledSize(QSize(20, 20));
         top_panel->setIconVisibleInMenu(false);
         dock->setIconVisibleInMenu(true);
     }
-    if (know_what==pos_up_down)
+    else if (know_what==pos_up_down)
     {
         change_pos=true;
         pos_up_down->setIconVisibleInMenu(true);
@@ -234,7 +245,7 @@ void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
         Layout->setDirection(QBoxLayout::LeftToRight);
         setLayout(Layout);
     }
-    if (know_what==pos_left_right)
+    else if (know_what==pos_left_right)
     {
         change_pos=true;
         pos_up_down->setIconVisibleInMenu(false);
@@ -242,6 +253,13 @@ void InformationWidget::contextMenuEvent(QContextMenuEvent *event)
         the_way_of_choose_pos=2;
         Layout->setDirection(QBoxLayout::Down);
         setLayout(Layout);
+    }
+    else
+    {
+        if (menu_sender)
+        {
+            menu_sender->Send_Ptr(know_what);
+        }
     }
 }
 void InformationWidget::dragEnterEvent(QDragEnterEvent *event)
@@ -268,4 +286,19 @@ void InformationWidget::dropEvent(QDropEvent *event)
             }
         }
     }
+}
+void InformationWidget::getIsMouseInPluginCarrier(bool result)
+{
+    Easy_Desktop_control = true;
+    mouse_in_carrier = result;
+}
+void InformationWidget::set_carrier_menu(QMenu *carrier_menu, P_Sender * const m_menu_sender)
+{
+    if (item_carrier_menu)
+    {
+        menu->removeAction(item_carrier_menu);
+        item_carrier_menu = nullptr;
+    }
+    menu_sender = m_menu_sender;
+    item_carrier_menu = menu->addMenu(carrier_menu);
 }

@@ -129,7 +129,7 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
         {
         }
     }
-    if (know_what==action_all)
+    else if (know_what==action_all)
     {
         action_all->setIconVisibleInMenu(true);
         action_this->setIconVisibleInMenu(false);
@@ -137,7 +137,7 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
         action_math_way->setIconVisibleInMenu(false);
         the_way_of_playing=1;
     }
-    if (know_what==action_this)
+    else if (know_what==action_this)
     {
         action_all->setIconVisibleInMenu(false);
         action_this->setIconVisibleInMenu(true);
@@ -145,7 +145,7 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
         action_math_way->setIconVisibleInMenu(false);
         the_way_of_playing=2;
     }
-    if (know_what==action_random)
+    else if (know_what==action_random)
     {
         action_all->setIconVisibleInMenu(false);
         action_this->setIconVisibleInMenu(false);
@@ -153,7 +153,7 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
         action_math_way->setIconVisibleInMenu(false);
         the_way_of_playing=3;
     }
-    if (know_what==action_math_way)
+    else if (know_what==action_math_way)
     {
         action_all->setIconVisibleInMenu(false);
         action_this->setIconVisibleInMenu(false);
@@ -165,58 +165,65 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
         b=QInputDialog::getInt(nullptr,"获取","获取b,y=(p/q)x^n+b (x为当前,y为目标)");
         the_way_of_playing=4;
     }
-    if (know_what==lyric_show)
+    else if (know_what==lyric_show)
     {
         lyric_show->setIconVisibleInMenu(true);
         lyric_hide->setIconVisibleInMenu(false);
         lyric_move->setIconVisibleInMenu(false);
         the_way_of_lyric=1;
     }
-    if (know_what==lyric_hide)
+    else if (know_what==lyric_hide)
     {
         lyric_show->setIconVisibleInMenu(false);
         lyric_hide->setIconVisibleInMenu(true);
         lyric_move->setIconVisibleInMenu(false);
         the_way_of_lyric=2;
     }
-    if (know_what==lyric_move)
+    else if (know_what==lyric_move)
     {
         lyric_show->setIconVisibleInMenu(false);
         lyric_hide->setIconVisibleInMenu(false);
         lyric_move->setIconVisibleInMenu(true);
         the_way_of_lyric=3;
     }
-    if (know_what==action_set_lyric_font)
+    else if (know_what==action_set_lyric_font)
     {
         set_lyric_font=true;
     }
-    if (know_what==action_set_back_color)
+    else if (know_what==action_set_back_color)
     {
         set_back_color=true;
     }
-    if (know_what==wait_to_play)
+    else if (know_what==wait_to_play)
     {
         wait_to_way=1;
         wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
         can_wait_to_do=true;
     }
-    if (know_what==wait_to_pause)
+    else if (know_what==wait_to_pause)
     {
         wait_to_way=2;
         wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
         can_wait_to_do=true;
     }
-    if (know_what==wait_to_stop)
+    else if (know_what==wait_to_stop)
     {
         wait_to_way=3;
         wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
         can_wait_to_do=true;
     }
-    if (know_what==clean_all_wait)
+    else if (know_what==clean_all_wait)
     {
         wait_to_way=4;
         wait_time=QInputDialog::getInt(nullptr,"获取","获取等待时间(ms,1000ms=1s,int,>0)");
         can_wait_to_do=true;
+    }
+    else
+    {
+        if (menu_sender)
+        {
+            menu_sender->Send_Ptr(know_what);
+        }
     }
     }
     else
@@ -226,11 +233,11 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
         {
             up_this=true;
         }
-        if (know_what==move_down)
+        else if (know_what==move_down)
         {
             down_this=true;
         }
-        if (know_what==move_out)
+        else if (know_what==move_out)
         {
             QMessageBox MBox;
             MBox.setWindowTitle("是否移除");
@@ -246,7 +253,7 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
             {
             }
         }
-        if (know_what==del_file)
+        else if (know_what==del_file)
         {
             QMessageBox MBox;
             MBox.setWindowTitle("是否删除");
@@ -262,9 +269,16 @@ void InformationPopup::contextMenuEvent(QContextMenuEvent *event)
             {
             }
         }
-        if (know_what==get_lyric)
+        else if (know_what==get_lyric)
         {
             to_get_lyric=true;
+        }
+        else
+        {
+            if (menu_sender)
+            {
+                menu_sender->Send_Ptr(know_what);
+            }
         }
     }
 }
@@ -280,4 +294,14 @@ bool InformationPopup::eventFilter(QObject *watched, QEvent *event)
             change=true;
         }
     }
+}
+void InformationPopup::set_carrier_menu(QMenu *carrier_menu, P_Sender * const m_menu_sender)
+{
+    if (popup_carrier_menu)
+    {
+        menu->removeAction(popup_carrier_menu);
+        popup_carrier_menu = nullptr;
+    }
+    menu_sender = m_menu_sender;
+    popup_carrier_menu = menu->addMenu(carrier_menu);
 }
